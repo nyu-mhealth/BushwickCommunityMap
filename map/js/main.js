@@ -7,116 +7,38 @@ app.map = (function(w,d, $, _){
   /*** local variables for map parts and layers ***/
   var el = {
     map : null,
+    cdbURL : null,
     styles: null,
     sql : null,
-    toner : null,
     tonerLite : null,
     satellite : null,
-    osmGeocoder : null,
     taxLots : null,
-    far : null,
-    rentStabilized : null,
     dobPermits : null,
-    vacantLand : null,
-    yearBuilt : null,
-    test : null
+    dobPermitsA1 : null,
+    dobPermitsA2A3 : null,
+    dobPermitsNB : null,
+    geocoder : null,
+    geocoderMarker : null
   };
 
-  /**** sample CartoCSS for styling tax lot data ****/
-  el.styles = {
-   // default style, all lots are the same color
-    regular : '#bushwick_pluto14v1 {' +
-                                  'polygon-fill: hsl(200,50%,50%);' +
-                                  'polygon-opacity: 0.75;' +
-                                  'line-color: #000;' +
-                                  'line-width: 0.2;' +
-                                  'line-opacity: 0.5;' +
-                                '}',
-    // red highlight                            
-    red : '#bushwick_pluto14v1 {' +
-                                  'polygon-fill: hsl(0,100%,30%);' +
-                                  'polygon-opacity: 0.75;' +
-                                  'line-color: #000;' +
-                                  'line-width: 0.2;' +
-                                  'line-opacity: 0.5;' +
-                                '}',
-    
-    // category style based on zoning
-    zoning : "#bushwick_pluto14v1 {" +
-                                     "polygon-opacity: 0.75;" +
-                                     "line-color: #000;" +
-                                     "line-width: 0.2;" +
-                                     "line-opacity: 0.5;" +
-                                  "}" +                                
-                                  '#bushwick_pluto14v1[zoning_style="R"] { polygon-fill: #A6CEE3;}' +
-                                  '#bushwick_pluto14v1[zoning_style="RC"] {polygon-fill: #1F78B4;}' +
-                                  '#bushwick_pluto14v1[zoning_style="M"] {polygon-fill: #FFCC00;}' +
-                                  '#bushwick_pluto14v1[zoning_style="C"] {polygon-fill: #7B00B4;}' +
-                                  '#bushwick_pluto14v1[zoning_style="P"] {polygon-fill: #229A00;}' +
-                                  '#bushwick_pluto14v1[zoning_style=""] {polygon-fill: #6b6868;}',
-    
-    // choropleth style based on Built FAR                                
-    builtFAR : "#bushwick_pluto14v1 {" +
-                               "polygon-fill: #F1EEF6;" +
-                               "polygon-opacity: 0.8;" +
-                               "line-color: #000;" +
-                               "line-width: 0.2;" +
-                               "line-opacity: 0.5;" +
-                            "}" +                           
-                            '#bushwick_pluto14v1[builtfar <= 23.05] { polygon-fill: #91003F;}' +
-                            '#bushwick_pluto14v1[builtfar <= 8.59] {polygon-fill: #CE1256;}' +
-                            '#bushwick_pluto14v1[builtfar <= 3.95] {polygon-fill: #E7298A;}' +
-                            '#bushwick_pluto14v1[builtfar <= 3.53] {polygon-fill: #DF65B0;}' +
-                            '#bushwick_pluto14v1[builtfar <= 2.7] {polygon-fill: #C994C7;}' +
-                            '#bushwick_pluto14v1[builtfar <= 1.57] {polygon-fill: #D4B9DA;}'+  
-                            '#bushwick_pluto14v1[builtfar <= 1.55]{polygon-fill: #F1EEF6;}',
+  // reference cartocss styles from mapStyles.js
+  el.styles = app.mapStyles;
+  // url to cartodb bushwick community map viz json
+  el.cdbURL = "http://bushwick.cartodb.com/api/v2/viz/64ceb582-71e2-11e4-b052-0e018d66dc29/viz.json";
 
-    // choropleth style based on Residential FAR
-    residFAR :  "#bushwick_pluto14v1 {" +
-                               "polygon-fill: #FFFFB2;" +
-                               "polygon-opacity: 0.8;" +
-                               "line-color: #000;" +
-                               "line-width: 0.2;" +
-                               "line-opacity: 0.5;" +
-                            "}" +                           
-                            '#bushwick_pluto14v1[ residfar <= 3.44] { polygon-fill: #BD0026;}' +
-                            '#bushwick_pluto14v1[ residfar <= 2.43] {polygon-fill: #F03B20;}' +
-                            '#bushwick_pluto14v1[ residfar <= 0.9] {polygon-fill: #FD8D3C;}' +
-                            '#bushwick_pluto14v1[ residfar <= 0.9] {polygon-fill: #FECC5C;}' +
-                            '#bushwick_pluto14v1[ residfar <= 0.6] {polygon-fill: #FFFFB2;}',                             
-    // choropleth style for available FAR
-    availFAR : "#bushwick_pluto14v1{" +
-                      "polygon-fill: #FFFFB2;" +
-                      "polygon-opacity: 0.8;" +
-                      "line-color: #000;" +
-                      "line-width: 0.2;" +
-                      "line-opacity: 0.5;" +
-                      "}" +
-                      "#bushwick_pluto14v1 [ availablefar <= 4] {" +
-                      "polygon-fill: #BD0026;" +
-                      "}" +
-                      "#bushwick_pluto14v1 [ availablefar <= 3.2] {" +
-                      "polygon-fill: #F03B20;" +
-                      "}" +
-                      "#bushwick_pluto14v1 [ availablefar <= 2.4000000000000004] {" +
-                      "polygon-fill: #FD8D3C;" +
-                      "}" +
-                      "#bushwick_pluto14v1 [ availablefar <= 1.6] {" +
-                      "polygon-fill: #FECC5C;" +
-                      "}" +
-                      "#bushwick_pluto14v1 [ availablefar <= 0.8] {" +
-                      "polygon-fill: #FFFFB2;" +
-                      "}"
-  };
-
+  // queries for map pluto tax lots
+  // sent to cartodb when layer buttons clicked
   el.sql = {
-    all : "SELECT * FROM bushwick_pluto14v1;",
-    rentStab : "SELECT * FROM bushwick_pluto14v1 WHERE yearbuilt < 1974 AND unitsres > 6;",
-    vacant : "SELECT * FROM bushwick_pluto14v1 WHERE landuse = '11';"
+    all : "SELECT * FROM bushwick_pluto14v1",
+    rentStab : "SELECT * FROM bushwick_pluto14v1 WHERE yearbuilt < 1974 AND unitsres > 6",
+    vacant : "SELECT * FROM bushwick_pluto14v1 WHERE landuse = '11'",
   };
+
+  el.geocoder = new google.maps.Geocoder();
                                                                            
-  // instantiate the leaflet map object
+  // set up the map
   var initMap = function() {
+    // map paramaters
     var params = {
       center : [40.6941, -73.9162],
       minZoom : 14,
@@ -126,87 +48,243 @@ app.map = (function(w,d, $, _){
       zoomControl : false
     }
 
+    // instantiate the Leaflet map
     el.map = L.map('map', params);
-    el.toner = L.tileLayer('http://{s}.tile.stamen.com/toner/{z}/{x}/{y}.png', {
-      attribution: 'Map tiles by <a href="http://stamen.com">Stamen Design</a>, ' + 
-                        '<a href="http://creativecommons.org/licenses/by/3.0">CC BY 3.0</a> &mdash; ' + 
-                        'Map data {attribution.OpenStreetMap}'
-    });
+    // stamen toner lite base layer
     el.tonerLite = new L.StamenTileLayer('toner-lite');
-    el.satellite = new L.Google();
-    el.osmGeocoder = new L.Control.OSMGeocoder(options = {position:'bottomright'});    
-    // add stamen toner layer as default base layer
     el.map.addLayer(el.tonerLite);
     // add the tax lot layer from cartodb
-    getTaxLots(el.styles.regular);
-  
+    getCDBData(params);
   } 
 
-  // function to load CartoDB tax lot layer
-  var getTaxLots = function(css) {
-    // cartodb visualization URL to access Pluto tax lot tiles
-    var cdbURL = "http://bushwick.cartodb.com/api/v2/viz/64ceb582-71e2-11e4-b052-0e018d66dc29/viz.json";
-    var query = 'SELECT * FROM bushwick_pluto14v1';
-
-    cartodb.createLayer(el.map, cdbURL, {
+  // function to load map pluto tax lot layer and dob permit layer 
+  // from CartoDB 
+  var getCDBData = function(mapOptions) {  
+    cartodb.createLayer(el.map, el.cdbURL, {
         cartodb_logo: false, 
         legends: false
       }, 
       function(layer) {
-        layer.getSubLayer(0).setCartoCSS(css);
+        // store the map pluto tax lot sublayer
+        layer.getSubLayer(0).setCartoCSS(el.styles.regular);
+        layer.getSubLayer(0).setSQL(el.sql.all);
         el.taxLots = layer.getSubLayer(0);
+
+        // store the dob permits a1 sublayer
+        el.dobPermitsA1 = layer.createSubLayer({
+          sql : "SELECT * FROM exp_codedjobs_a1",
+          cartocss : '#exp_codedjobs_a1 {marker-width: 7; marker-fill: hsl(0,0%,35%); marker-line-color: white; marker-line-width: 0;}',
+          interactivity: ['address']
+        });
+
+        // store the dob permits a2a3 sublayer
+        el.dobPermitsA2A3 = layer.createSubLayer({
+          sql : "SELECT * FROM exp_codedjobs_a2a3",
+          cartocss : '#exp_codedjobs_a1 {marker-width: 7; marker-fill: hsl(100,0%,60%); marker-line-color: white; marker-line-width: 0;}',
+          interactivity: 'address'
+        });
+
+        // store the dob permits nb sublayer
+        el.dobPermitsNB = layer.createSubLayer({
+          sql : "SELECT * FROM exp_codedjobs_nb",
+          cartocss : '#exp_codedjobs_a1 {marker-width: 7; marker-fill: hsl(350,0%,10%); marker-line-color: white; marker-line-width: 0;}',
+          interactivity: 'address'
+        });
+
+        var event = function(e){
+              $('#tool-tip').css({
+                 left:  e.pageX,
+                 top:   e.pageY
+              });
+          };
+
+        el.dobPermitsA1.infowindow.set({
+          'template' : $('#infowindow_template').html()
+        })
+          .on('error', function(err){
+            console.log('infowindow error: ', err);
+          });                                 
+
+        // hide sublayers for dob permits
+        var num_sublayers = layer.getSubLayerCount();
+        for (var i = 1; i < num_sublayers; i++) { 
+          //console.log('sublayers: ', layer.getSubLayer(i)); 
+          layer.getSubLayer(i).setInteraction(true);          
+          // layer.getSubLayer(i).infowindow.set({
+          //   'template' : $('#infowindow_template').html()
+          // })
+          //   .on('error', function(err){
+          //     console.log('infowindow error: ', err);
+          //   });
+          
+          layer.getSubLayer(i).on('featureOver', function(e,pos,latlng,data){
+            $('#tool-tip').html('<p>'  + data.address + '</p>');
+            $(document).bind('mousemove', event);
+            $('#tool-tip').show();
+          });
+
+          layer.getSubLayer(i).on('featureOut', function(e,pos,latlng,data){
+           //Make the tooltip go away when off cities
+            $('#tool-tip').hide();
+            $(document).unbind('mousemove', event, false);
+          });
+
+          layer.getSubLayer(i).hide();
+
+        }
+
       }).addTo(el.map);    
   };
 
-  // change the cartoCSS of the tax lot layer
-  var changeCartoCSS = function(css) {
-    el.taxLots.setCartoCSS(css);
+  // change the cartoCSS of a layer
+  var changeCartoCSS = function(layer, css) {
+    layer.setCartoCSS(css);
   };
 
-  var changeSQL = function(sql) {
-    el.taxLots.setSQL(sql);
+  // change SQL query of a layer
+  var changeSQL = function(layer, sql) {
+    layer.setSQL(sql);
   }
 
-  // corresponding cartoCSS changes to buttons
+  // corresponding cartoCSS changes to tax lot layer buttons
   var taxLotActions = {
     regular : function() {
-      changeCartoCSS(el.styles.regular);
-      changeSQL(el.sql.all);
+      changeCartoCSS(el.taxLots, el.styles.regular);
+      changeSQL(el.taxLots, el.sql.all);
       return true;
     },
     zoning : function() {
-      changeCartoCSS(el.styles.zoning);
-      changeSQL(el.sql.all);
+      changeCartoCSS(el.taxLots, el.styles.zoning);
+      changeSQL(el.taxLots, el.sql.all);
       return true;
     },
     availfar : function() {
-      changeCartoCSS(el.styles.availFAR);
-      changeSQL(el.sql.all);
+      changeCartoCSS(el.taxLots, el.styles.availFAR);
+      changeSQL(el.taxLots, el.sql.all);
       return true;
     },
     rentstab : function() {
-      changeCartoCSS(el.styles.red);
-      changeSQL(el.sql.rentStab);
+      changeCartoCSS(el.taxLots, el.styles.red);
+      changeSQL(el.taxLots, el.sql.rentStab);
       return true;
     },
     vacant : function() {
-      changeCartoCSS(el.styles.red);
-      changeSQL(el.sql.vacant);
+      changeCartoCSS(el.taxLots, el.styles.red);
+      changeSQL(el.taxLots, el.sql.vacant);
     }
   };
 
+  // add tax lot layer button event listeners
   var initButtons = function() {
     $('.button').click(function() {
       $('.button').removeClass('selected');
       $(this).addClass('selected');
       taxLotActions[$(this).attr('id')]();
+    }); 
+  }
+
+  // change dob permit layer sql based on check box boolean
+  var initCheckboxes = function() {
+    // checkboxes for dob permit layer
+    var checkboxDOB = $('input.dob:checkbox'),
+          $a1 = $('#a1'),
+          $a2a3 = $('#a2a3'),
+          $nb = $('#nb');
+
+    // toggle A1 major alterations layer
+    $a1.change(function(){
+      if ($a1.is(':checked')){
+        el.dobPermitsA1.show();
+        // el.dobPermitsA1.setInteraction(true);
+        el.dobPermitsA1.setInteractivity('address');
+      } else {
+        el.dobPermitsA1.hide();
+      };
+    });
+
+    // toggle A2, A3 minor alterations layer
+    $a2a3.change(function(){
+      if ($a2a3.is(':checked')){
+        el.dobPermitsA2A3.show();
+        // el.dobPermitsA2A3.setInteraction(true);
+        //el.dobPermitsA2A3.setInteractivity('address, job, initialcos, jt_description, ownerphone, ownername, ownertype');
+      } else {
+        el.dobPermitsA2A3.hide();
+      };
     });    
-  } 
+
+    // toggle NB new buildings layer
+    $nb.change(function(){
+      if ($nb.is(':checked')){
+        el.dobPermitsNB.show();
+        // el.dobPermitsNB.setInteraction(true);
+        // el.dobPermitsNB.setInteractivity('address, job, initialcos, jt_description, ownerphone, ownername, ownertype'); 
+      } else {
+        el.dobPermitsNB.hide();
+      };
+    });        
+  }
+
+  // geocode search box text and create a marker on the map
+  var geocode = function(address) {
+    // bounding box for nyc to improve geocoder results
+    // 40.678685,-73.942451,40.710247,-73.890266
+    var bounds = new google.maps.LatLngBounds(
+          new google.maps.LatLng(40.678685,-73.942451), //sw
+          new google.maps.LatLng(40.710247,-73.890266) //ne
+          );    
+      el.geocoder.geocode({ 'address': address, 'bounds' : bounds }, function(results, status) {
+        if (status == google.maps.GeocoderStatus.OK) {
+          var latlng = [results[0].geometry.location.k , results[0].geometry.location.B];
+          console.log('gecoder results: ', results);
+          // console.log('latlng: ', latlng);
+          
+          // remove geocoded marker if one already exists
+          if (el.geocoderMarker) { 
+            el.map.removeLayer(el.geocoderMarker);
+          }
+          // add a marker and pan and zoom the map to it
+          el.geocoderMarker = new L.marker(latlng).addTo(el.map);
+          el.geocoderMarker.bindPopup("<h4>" + results[0].formatted_address + "</h4>" ).openPopup();
+          el.map.setView(latlng, 20);
+          };
+      });
+  }
+
+  // search box interaction
+  var searchAddress = function() {
+    $('#search-box').focus(function(){
+      if ($(this).val()==="Search for a Bushwick address") {
+        $(this).val("");
+      }
+    });
+    $('#search-box').on('blur',function(){
+      // console.log($(this).val());
+      if ($(this).val()!=="") {
+        $address = $(this).val()
+        geocode($address);  
+        $(this).val("");
+      } 
+    });
+  }
+
+  // set up custom zoom buttons
+  var initZoomButtons = function(){
+    $('#zoom-in').on('click', function(){
+      el.map.zoomIn();
+    });
+    $('#zoom-out').on('click', function(){
+      el.map.zoomOut();
+    });
+  }
 
   // get it going!
   var init = function() {
     initMap();
-    initButtons();  
+    initButtons();
+    initCheckboxes();
+    searchAddress();
+    initZoomButtons();
   }
 
   // only return init() and the stuff in the el object

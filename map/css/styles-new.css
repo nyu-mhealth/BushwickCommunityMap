@@ -29,7 +29,6 @@ html, body {
 #intro{
   position: absolute;
   top: 40px;
-  left: 40px;
   width: 360px;
   
   padding: 12px;
@@ -68,7 +67,11 @@ input{
   bottom: 40px;
   width: 880px;
   height: 56px;
+<<<<<<< HEAD
   padding: 12px;     
+=======
+  padding: 12px;   
+>>>>>>> parsons
 
   z-index: 85;
 }
@@ -249,3 +252,26 @@ mimicks leaflet's zoom ui */
 
   z-index: 2100;
 }
+
+/* tool tip styles for dob permit layers*/
+#tool-tip {
+  position: absolute;
+  width: auto;
+  height: auto;
+  background-color: white;
+  opacity: .9;
+  z-index: 150;
+  border-radius: 15px;
+  text-align: center;
+  color: #3E7BB6;
+  vertical-align: bottom;
+  font-family: Helvetica, sans-serif;
+  font-weight: 400;  
+  font-size: 12px;
+  padding: 4px;
+}
+
+#tool-tip p {
+  margin-top: 5px;
+}
+
