@@ -122,7 +122,8 @@ app.map = (function(w,d, $, _){
       minZoom : 14,
       maxZoom : 20,
       zoom : 15,
-      maxBounds : L.latLngBounds([40.670809,-73.952579],[40.713565,-73.870354])
+      maxBounds : L.latLngBounds([40.670809,-73.952579],[40.713565,-73.870354]),
+      zoomControl : false
     }
 
     el.map = L.map('map', params);

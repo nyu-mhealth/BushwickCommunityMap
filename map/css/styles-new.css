@@ -37,7 +37,7 @@ html, body {
   background-color: hsla(0, 100%, 30%, 0.75);
   color: white;
   
-  z-index: 90;
+  z-index: 95;
 }
 
 #intro h1{
@@ -59,7 +59,7 @@ input{
 .ui{
   background-color: hsla(0, 0%, 100%, 0.92);  
   border: 2px solid hsl(0, 100%, 35%);
-  border-radius: 14px;  
+  border-radius: 7px;  
 }
 
 #history{
@@ -68,8 +68,7 @@ input{
   bottom: 40px;
   width: 880px;
   height: 56px;
-
-  padding: 12px;   
+  padding: 12px;     
 
   z-index: 85;
 }
@@ -200,4 +199,53 @@ label {
 #map {
   width: 100%;
   height: 100%;
+}
+
+/* Utilized on the map-tiles ui
+mimicks leaflet's zoom ui */
+.mini{
+  padding: 0;
+  margin: 0;
+  box-shadow: 0 0 0 black;  
+  border-radius: 4px;
+}
+
+.mini a{
+  margin: 0;
+  border: solid 1px rgba(0, 0, 0, 0.1);
+  padding: 0;
+  border-radius: 0;
+  
+  background-color: rgba(0, 0, 0, 0);
+  width: 30px;
+  height: 30px;
+  display: inline-block;
+
+  box-shadow: 0 0 0 black; 
+
+  text-align: center;
+  font-size: 20px; 
+}
+
+.mini a:hover{
+  background-color: rgba(0, 0, 0, 0.05);
+  border: solid 1px rgba(0, 0, 0, 0.1);
+  color: black;
+}
+
+#ui-map-tiles{
+  position: absolute;
+  top: 108px;
+  right: 250px;
+  
+  z-index: 2000;
+}
+
+#ui-zoom{
+  position: absolute;
+
+  top: 153px;
+  right: 250px;
+
+  z-index: 2100;
 }
