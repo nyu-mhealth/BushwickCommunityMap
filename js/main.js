@@ -385,10 +385,10 @@ app.map = (function(w,d, $, _){
 
   // geocode search box text and create a marker on the map
   var geocode = function(address) {
-    // reference bounding box for Bushwick to improve geocoder results: 40.678685,-73.942451,40.710247,-73.890266
+    // HOLLY reference bounding box for DC to improve geocoder results: 38.811572,-77.110709,38.991653,-76.885489
     var bounds = new google.maps.LatLngBounds(
-          new google.maps.LatLng(40.678685,-73.942451), // sw
-          new google.maps.LatLng(40.710247,-73.890266) // ne
+          new google.maps.LatLng(38.811572,-77.110709), // sw
+          new google.maps.LatLng(38.991653,-76.885489) // ne
           );    
       el.geocoder.geocode({ 'address': address, 'bounds' : bounds }, function(results, status) {
         if (status == google.maps.GeocoderStatus.OK) {
