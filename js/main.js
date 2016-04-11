@@ -36,8 +36,8 @@ app.map = (function(w,d, $, _){
 
   // reference cartocss styles from mapStyles.js
   el.styles = app.mapStyles;
-  // url to cartodb bushwick community map viz json
-  el.cdbURL = "https://bushwick.cartodb.com/api/v2/viz/64ceb582-71e2-11e4-b052-0e018d66dc29/viz.json";
+  // url to cartodb warnings viz json
+  el.cdbURL = "https://legacy.cartodb.com/api/v2/viz/1dd1d688-000b-11e6-84ac-0e31c9be1b51/viz.json";
 
   // queries for map pluto tax lots
   // sent to cartodb when layer buttons clicked
@@ -63,7 +63,7 @@ app.map = (function(w,d, $, _){
       center : [38.8963722,-77.0215417],
       minZoom : 10,
       maxZoom : 19,
-      zoom : 12,
+      zoom : 12 ,
       //maxBounds : L.latLngBounds([40.675496,-73.957987],[40.714216,-73.877306]), 
       zoomControl : false,
       infoControl: false,
@@ -82,13 +82,14 @@ app.map = (function(w,d, $, _){
         }
     });
 
-    var gentIcon = L.icon({
-      iconUrl: 'https://raw.githubusercontent.com/clhenrick/BushwickCommunityMap/gh-pages/images/gentrification.png',
-      iconRetinaUrl: 'https://raw.githubusercontent.com/clhenrick/BushwickCommunityMap/gh-pages/images/gentrification-2x.png',
-      iconSize: [30, 30],
-      iconAnchor: [15, 15],
-      popupAnchor: [0, -15],
-    });    
+    //HOLLY Comment out icon for stories
+    // var gentIcon = L.icon({
+    //   iconUrl: 'https://raw.githubusercontent.com/clhenrick/BushwickCommunityMap/gh-pages/images/gentrification.png',
+    //   iconRetinaUrl: 'https://raw.githubusercontent.com/clhenrick/BushwickCommunityMap/gh-pages/images/gentrification-2x.png',
+    //   iconSize: [30, 30],
+    //   iconAnchor: [15, 15],
+    //   popupAnchor: [0, -15],
+    // });    
 
     // lat lngs for locations of stories
     el.bushwick = new L.LatLng(40.694631,-73.925028);
@@ -147,7 +148,8 @@ app.map = (function(w,d, $, _){
     })   
 
     // load the rheingold GeoJSON layer
-    loadRheingold();
+    //HOLLY comment out Reihngold
+    //loadRheingold();
     // add the tax lot layer from cartodb
     getCDBData();
   }
