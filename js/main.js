@@ -83,13 +83,13 @@ app.map = (function(w,d, $, _){
     });
 
     //HOLLY Comment out icon for stories
-    // var gentIcon = L.icon({
-    //   iconUrl: 'https://raw.githubusercontent.com/clhenrick/BushwickCommunityMap/gh-pages/images/gentrification.png',
-    //   iconRetinaUrl: 'https://raw.githubusercontent.com/clhenrick/BushwickCommunityMap/gh-pages/images/gentrification-2x.png',
-    //   iconSize: [30, 30],
-    //   iconAnchor: [15, 15],
-    //   popupAnchor: [0, -15],
-    // });    
+    var gentIcon = L.icon({
+      iconUrl: 'https://raw.githubusercontent.com/clhenrick/BushwickCommunityMap/gh-pages/images/gentrification.png',
+      iconRetinaUrl: 'https://raw.githubusercontent.com/clhenrick/BushwickCommunityMap/gh-pages/images/gentrification-2x.png',
+      iconSize: [30, 30],
+      iconAnchor: [15, 15],
+      popupAnchor: [0, -15],
+    });    
 
     // lat lngs for locations of stories
     el.bushwick = new L.LatLng(40.694631,-73.925028);
