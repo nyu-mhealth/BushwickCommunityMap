@@ -60,10 +60,10 @@ app.map = (function(w,d, $, _){
   var initMap = function() {
     // map paramaters to pass to Leaflet
     var params = {
-      center : [40.694631,-73.925028],
-      minZoom : 14,
+      center : [38.8963722,-77.0215417],
+      minZoom : 10,
       maxZoom : 19,
-      zoom : 15,
+      zoom : 12,
       //maxBounds : L.latLngBounds([40.675496,-73.957987],[40.714216,-73.877306]), 
       zoomControl : false,
       infoControl: false,
