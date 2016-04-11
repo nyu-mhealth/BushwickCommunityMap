@@ -8,9 +8,9 @@ app.map = (function(w,d, $, _){
   //  store in an object called 'el' that can be accessed elsewhere
   var el = {
     map : null,
+    //url for viz.json
     cdbURL : null,
     styles: null,
-    styleCur : null,
     sql : null,
     mapboxTiles : null,
     satellite : null,
@@ -40,12 +40,12 @@ app.map = (function(w,d, $, _){
   el.cdbURL = "https://legacy.cartodb.com/api/v2/viz/402ae422-001f-11e6-98c1-0ea31932ec1d/viz.json";
 
   //HOLLY - comment out
-  // queries for map pluto tax lots
+  // queries for warning types
   // sent to cartodb when layer buttons clicked
   el.sql = {
-    all : "SELECT * FROM bushwick_pluto14v1",
-    rentStab : "SELECT a.* FROM bushwick_pluto14v1 a, bushwick_rent_stabl_merge_centroids b where st_intersects(a.the_geom, b.the_geom)",
-    vacant : "SELECT * FROM bushwick_pluto14v1 WHERE landuse = '11'",
+    all : "SELECT * FROM allwarnings_dc1",
+    warningLetters : "SELECT * FROM allwarnings_dc1 WHERE decisiontype = 'Warning Letter'",
+    civilPenalty : "SELECT * FROM bushwick_pluto14v1 WHERE decisiontype = 'Civil Money Penalty'",
   };
 
   // compile the underscore legend template for rendering map legends for choropleth layers
