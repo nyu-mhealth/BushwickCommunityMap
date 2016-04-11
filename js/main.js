@@ -14,7 +14,7 @@ app.map = (function(w,d, $, _){
     sql : null,
     mapboxTiles : null,
     satellite : null,
-    taxLots : null,
+    warningpts : null,
     baseLayers : null,
     dobPermitsA1 : null,
     dobPermitsA2A3 : null,
@@ -151,7 +151,7 @@ app.map = (function(w,d, $, _){
     // load the rheingold GeoJSON layer
     //HOLLY comment out Reihngold
     //loadRheingold();
-    // add the tax lot layer from cartodb
+    // add the warnings layer from cartodb
     getCDBData();
   }
 
@@ -177,7 +177,7 @@ app.map = (function(w,d, $, _){
         // store the map pluto tax lot sublayer
         layer.getSubLayer(0).setCartoCSS(el.styles.regular);
         layer.getSubLayer(0).setSQL(el.sql.all);
-        el.taxLots = layer.getSubLayer(0);
+        el.warningpts = layer.getSubLayer(0);
 
         // create and store the dob permits a1 sublayer
         el.dobPermitsA1 = layer.createSubLayer({
@@ -266,37 +266,37 @@ app.map = (function(w,d, $, _){
   // legends are displayed or hidden as needed
   el.taxLotActions = {
     regular : function() {
-      changeCartoCSS(el.taxLots, el.styles.regular);
-      changeSQL(el.taxLots, el.sql.all);
+      changeCartoCSS(el.warningpts, el.styles.regular);
+      changeSQL(el.warningpts, el.sql.all);
       renderLegend(null);
       return true;
     },
     landuse : function() {
-      changeCartoCSS(el.taxLots, el.styles.landuse);
-      changeSQL(el.taxLots, el.sql.all);
+      changeCartoCSS(el.warningpts, el.styles.landuse);
+      changeSQL(el.warningpts, el.sql.all);
       renderLegend(el.legendData.landuse);
       return true;
     },
     availfar : function() {
-      changeCartoCSS(el.taxLots, el.styles.availFAR);
-      changeSQL(el.taxLots, el.sql.all);
+      changeCartoCSS(el.warningpts, el.styles.availFAR);
+      changeSQL(el.warningpts, el.sql.all);
       renderLegend(el.legendData.availFAR);
       return true;
     },
     rentstab : function() {
-      changeCartoCSS(el.taxLots, el.styles.red);
-      changeSQL(el.taxLots, el.sql.rentStab);
+      changeCartoCSS(el.warningpts, el.styles.red);
+      changeSQL(el.warningpts, el.sql.rentStab);
       renderLegend(null);
       return true;
     },
     vacant : function() {
-      changeCartoCSS(el.taxLots, el.styles.red);
-      changeSQL(el.taxLots, el.sql.vacant);
+      changeCartoCSS(el.warningpts, el.styles.red);
+      changeSQL(el.warningpts, el.sql.vacant);
       renderLegend(null);
       return true;
     },
     yearbuilt : function(){
-      changeCartoCSS(el.taxLots, el.styles.yearbuilt);
+      changeCartoCSS(el.warningpts, el.styles.yearbuilt);
       changeSQL(el.taxLots, el.sql.all);
       renderLegend(el.legendData.yearBuilt);
       return true;
@@ -310,7 +310,7 @@ app.map = (function(w,d, $, _){
       $('.button').removeClass('selected');
       $(this).addClass('selected');
       el.taxLotActions[$(this).attr('id')]();
-      el.taxLots.show();
+      el.warningpts.show();
     }); 
   }
 
