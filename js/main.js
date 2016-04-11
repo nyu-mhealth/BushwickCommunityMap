@@ -297,7 +297,7 @@ app.map = (function(w,d, $, _){
     },
     yearbuilt : function(){
       changeCartoCSS(el.warningpts, el.styles.yearbuilt);
-      changeSQL(el.taxLots, el.sql.all);
+      changeSQL(el.warningpts, el.sql.all);
       renderLegend(el.legendData.yearBuilt);
       return true;
     }
