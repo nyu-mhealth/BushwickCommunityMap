@@ -39,6 +39,7 @@ app.map = (function(w,d, $, _){
   // url to cartodb warnings viz json
   el.cdbURL = "https://legacy.cartodb.com/api/v2/viz/1dd1d688-000b-11e6-84ac-0e31c9be1b51/viz.json";
 
+  //HOLLY - comment out
   // queries for map pluto tax lots
   // sent to cartodb when layer buttons clicked
   el.sql = {
