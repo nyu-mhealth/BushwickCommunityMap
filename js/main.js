@@ -156,15 +156,15 @@ app.map = (function(w,d, $, _){
   }
 
   // load the geoJSON boundary for the Rheingold development
-  function loadRheingold() {
-    $.getJSON('./data/rheingold_rezoning_area.geojson', function(json, textStatus) {
-        el.rheingoldPoly = L.geoJson(json, {
-          style: function(feature){
-            return { color: '#000', fill: false, fillOpacity: 0.2, dashArray: '5,10', lineCap: 'square' }
-          }
-        });
-    });
-  } 
+  // function loadRheingold() {
+  //   $.getJSON('./data/rheingold_rezoning_area.geojson', function(json, textStatus) {
+  //       el.rheingoldPoly = L.geoJson(json, {
+  //         style: function(feature){
+  //           return { color: '#000', fill: false, fillOpacity: 0.2, dashArray: '5,10', lineCap: 'square' }
+  //         }
+  //       });
+  //   });
+  // } 
 
   // function to load map pluto tax lot layer and dob permit layer from CartoDB
   var getCDBData = function() {  
