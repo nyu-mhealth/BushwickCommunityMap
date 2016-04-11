@@ -77,7 +77,7 @@ app.intro = (function(w,d,$,O) {
     el.map.setView(el.bushwick,15);    
     el.dobPermitsNB.hide();
     el.taxLotActions['regular']();
-    el.taxLots.show();
+    el.warningpts.show();
     el.featureGroup.clearLayers();
   }
 
@@ -86,7 +86,7 @@ app.intro = (function(w,d,$,O) {
     el.featureGroup.addLayer(el.rheingoldPoly);
     el.map.fitBounds(el.rheingoldPoly, {paddingTopLeft: [125, 35]});  
     el.taxLotActions['landuse']();
-    el.taxLots.show();    
+    el.warningpts.show();    
   }
 
   function slideTwo() {
@@ -94,14 +94,14 @@ app.intro = (function(w,d,$,O) {
       el.featureGroup.addLayer(el.rheingoldPoly);  
     }          
     el.taxLotActions['availfar']();      
-    el.taxLots.show();      
+    el.warningpts.show();      
   }
 
   function slideThree() {
     if (!el.featureGroup.hasLayer(el.rheingoldPoly)) {
       el.featureGroup.addLayer(el.rheingoldPoly);  
     }      
-    el.taxLots.hide();
+    el.warningpts.hide();
     el.dobPermitsNB.show();      
   }
 
@@ -112,11 +112,11 @@ app.intro = (function(w,d,$,O) {
     }          
     el.dobPermitsNB.hide();
     el.taxLotActions['rentstab']();
-    el.taxLots.show();
+    el.warningpts.show();
   }
 
   function slideFive() {
-    el.taxLots.hide();      
+    el.warningpts.hide();      
     el.featureGroup.clearLayers();   
     el.featureGroup.addLayer(el.colonyMarker);
   }
@@ -148,7 +148,7 @@ app.intro = (function(w,d,$,O) {
   function slideNine() {
     el.dobPermitsA1.show();
     el.dobPermitsA2A3.show();
-    el.taxLots.hide();
+    el.warningpts.hide();
   }
 
   function slideTen() {
@@ -157,7 +157,7 @@ app.intro = (function(w,d,$,O) {
     el.dobPermitsA1.hide();
     el.dobPermitsA2A3.hide();
     el.taxLotActions['regular']();
-    el.taxLots.show();  
+    el.warningpts.show();  
   }   
 
   function initOdyssey(O) {
