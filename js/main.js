@@ -37,7 +37,7 @@ app.map = (function(w,d, $, _){
   // reference cartocss styles from mapStyles.js
   el.styles = app.mapStyles;
   // url to cartodb warnings viz json
-  el.cdbURL = "https://legacy.cartodb.com/api/v2/viz/1dd1d688-000b-11e6-84ac-0e31c9be1b51/viz.json";
+  el.cdbURL = "https://legacy.cartodb.com/api/v2/viz/402ae422-001f-11e6-98c1-0ea31932ec1d/viz.json";
 
   //HOLLY - comment out
   // queries for map pluto tax lots
