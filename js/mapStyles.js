@@ -4,13 +4,17 @@ var app = app || {};
 app.mapStyles = (function(){
   return {
     // default style, all lots are the same color
-    regular : '#bushwick_pluto14v1 {' +
-                                  'polygon-fill: hsl(200,40%,90%);' +
-                                  'polygon-opacity: 0.75;' +
-                                  'line-color: #000;' +
-                                  'line-width: 0.2;' +
-                                  'line-opacity: 0.5;' +
+    regular : '#allwarnings_dc {' +
+                                  'marker-fill-opacity: 0.9;' +
+                                  'marker-line-color: #FFF;' +
+                                  'marker-line-width: 1;' +
+                                  'marker-line-opacity: 1;' +
+                                  'marker-placement: point;' +
+                                  ' marker-type: ellipse;' +
+                                  'marker-width: 10;' +
+                                  'marker-allow-overlap: true;' +
                                 '}',
+
     // red highlight                            
     red : '#bushwick_pluto14v1 {' +
                                   'polygon-fill: hsl(0,100%,30%);' +
