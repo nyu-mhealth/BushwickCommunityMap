@@ -4,7 +4,7 @@ var app = app || {};
 app.mapStyles = (function(){
   return {
     // default style, all lots are the same color
-    regular : '#allwarnings_dc {' +
+    all : '#allwarnings_dc {' +
                                   'marker-fill-opacity: 0.9;' +
                                   'marker-line-color: #FFF;' +
                                   'marker-line-width: 1;' +
