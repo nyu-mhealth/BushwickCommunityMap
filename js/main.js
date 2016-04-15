@@ -93,24 +93,25 @@ app.map = (function(w,d, $, _){
     // });    
 
     // lat lngs for locations of stories
-    el.bushwick = new L.LatLng(40.694631,-73.925028);
-    el.rheingold = new L.LatLng(40.700740, -73.934209);
-    el.colony = new L.LatLng(40.695867,-73.928153);
-    el.linden = new L.LatLng(40.692776,-73.919756);
-    el.groveSt = new L.LatLng(40.700082, -73.913740);
+    // el.bushwick = new L.LatLng(40.694631,-73.925028);
+    // el.rheingold = new L.LatLng(40.700740, -73.934209);
+    // el.colony = new L.LatLng(40.695867,-73.928153);
+    // el.linden = new L.LatLng(40.692776,-73.919756);
+    // el.groveSt = new L.LatLng(40.700082, -73.913740);
 
-    el.colonyMarker = new L.marker(el.colony, {icon: gentIcon}).bindPopup('<a class="colony1209 story" href="#" data-slide="5">Colony 1209</a>');
-    el.groveStMarker = new L.marker(el.groveSt, {icon: gentIcon}).bindPopup('358 Grove St. Condos');
-    el.rheingoldMarker = new L.marker(el.rheingold, {icon: gentIcon}).bindPopup('<a class="rheingold story" href="#" data-slide="1">Rheingold Rezoning</a>');
-    el.lindenMarker = new L.marker(el.linden, {icon: gentIcon}).bindPopup('<a class="98linden story" href="#" data-slide="8">98 Linden</a>' );
+    // el.colonyMarker = new L.marker(el.colony, {icon: gentIcon}).bindPopup('<a class="colony1209 story" href="#" data-slide="5">Colony 1209</a>');
+    // el.groveStMarker = new L.marker(el.groveSt, {icon: gentIcon}).bindPopup('358 Grove St. Condos');
+    // el.rheingoldMarker = new L.marker(el.rheingold, {icon: gentIcon}).bindPopup('<a class="rheingold story" href="#" data-slide="1">Rheingold Rezoning</a>');
+    // el.lindenMarker = new L.marker(el.linden, {icon: gentIcon}).bindPopup('<a class="98linden story" href="#" data-slide="8">98 Linden</a>' );
     
-    // array to store sites of gentrification
-    el.sitesGent = [
-        el.colonyMarker,
-        el.groveStMarker,
-        el.rheingoldMarker,
-        el.lindenMarker
-      ];
+    // // array to store sites of gentrification
+    // el.sitesGent = [
+    //     el.colonyMarker,
+    //     el.groveStMarker,
+    //     el.rheingoldMarker,
+    //     el.lindenMarker
+    //   ];
+    //END HOLLY - stories - set for DELETE
     
     // instantiate the Leaflet map object
     el.map = new L.map('map', params);
