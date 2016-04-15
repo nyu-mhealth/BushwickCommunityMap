@@ -47,24 +47,25 @@ app.map = (function(w,d, $, _){
     vacant : "SELECT * FROM allwarnings_dc WHERE decisiontype = '11'",
   };
 
+  //HOLLY - research legend templates
   // compile the underscore legend template for rendering map legends for choropleth layers
-  _.templateSettings.variable = "legend";
-  el.template = _.template($("script.template").html());
+  // _.templateSettings.variable = "legend";
+  // el.template = _.template($("script.template").html());
 
-  // use google maps api geocoder
-  el.geocoder = new google.maps.Geocoder();
+  // // use google maps api geocoder
+  // el.geocoder = new google.maps.Geocoder();
 
-  el.legend = $('#ui-legend');
+  // el.legend = $('#ui-legend');
                                                                            
   // set up the map and map layers!
   var initMap = function() {
     // map paramaters to pass to Leaflet
     var params = {
-      center : [40.694631,-73.925028],
-      minZoom : 14,
-      maxZoom : 19,
-      zoom : 15,
-      maxBounds : L.latLngBounds([40.675496,-73.957987],[40.714216,-73.877306]), 
+      center : [38.8963722,-77.0215417], //DC
+      //minZoom : 14,
+      //maxZoom : 19,
+      zoom : 11,
+      //maxBounds : L.latLngBounds([40.675496,-73.957987],[40.714216,-73.877306]), 
       zoomControl : false,
       infoControl: false,
       attributionControl: true
@@ -82,13 +83,14 @@ app.map = (function(w,d, $, _){
         }
     });
 
-    var gentIcon = L.icon({
-      iconUrl: 'https://raw.githubusercontent.com/clhenrick/BushwickCommunityMap/gh-pages/images/gentrification.png',
-      iconRetinaUrl: 'https://raw.githubusercontent.com/clhenrick/BushwickCommunityMap/gh-pages/images/gentrification-2x.png',
-      iconSize: [30, 30],
-      iconAnchor: [15, 15],
-      popupAnchor: [0, -15],
-    });    
+    //HOLLY - icons for stories - set for DELETE
+    // var gentIcon = L.icon({
+    //   iconUrl: 'https://raw.githubusercontent.com/clhenrick/BushwickCommunityMap/gh-pages/images/gentrification.png',
+    //   iconRetinaUrl: 'https://raw.githubusercontent.com/clhenrick/BushwickCommunityMap/gh-pages/images/gentrification-2x.png',
+    //   iconSize: [30, 30],
+    //   iconAnchor: [15, 15],
+    //   popupAnchor: [0, -15],
+    // });    
 
     // lat lngs for locations of stories
     el.bushwick = new L.LatLng(40.694631,-73.925028);
