@@ -16,6 +16,32 @@ app.mapStyles = (function(){
                                   'marker-allow-overlap: true;' +
                                 '}',
 
+
+    // default style, all lots are the same color
+    all : '#warningLetters {' +
+                                  'marker-fill-opacity: 0.9;' +
+                                  'marker-line-color: #FFF;' +
+                                  'marker-line-width: 1;' +
+                                  'marker-line-opacity: 1;' +
+                                  'marker-placement: point;' +
+                                  ' marker-type: ellipse;' +
+                                  'marker-width: 10;' +
+                                  'marker-fill: #ffe800;' +
+                                  'marker-allow-overlap: true;' +
+                                '}',
+
+    // default style, all lots are the same color
+    all : '#civilPenalties {' +
+                                  'marker-fill-opacity: 0.9;' +
+                                  'marker-line-color: #FFF;' +
+                                  'marker-line-width: 1;' +
+                                  'marker-line-opacity: 1;' +
+                                  'marker-placement: point;' +
+                                  ' marker-type: ellipse;' +
+                                  'marker-width: 10;' +
+                                  'marker-fill: #850200;' +
+                                  'marker-allow-overlap: true;' +
+                                '}',
     // red highlight                            
     red : '#bushwick_pluto14v1 {' +
                                   'polygon-fill: hsl(0,100%,30%);' +
