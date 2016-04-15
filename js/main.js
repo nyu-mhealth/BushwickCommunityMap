@@ -52,8 +52,8 @@ app.map = (function(w,d, $, _){
   // _.templateSettings.variable = "legend";
   // el.template = _.template($("script.template").html());
 
-  // // use google maps api geocoder
-  // el.geocoder = new google.maps.Geocoder();
+  // use google maps api geocoder
+  el.geocoder = new google.maps.Geocoder();
 
   // el.legend = $('#ui-legend');
                                                                            
@@ -181,7 +181,7 @@ app.map = (function(w,d, $, _){
       }, 
       function(layer) {
         // store the warnings sublayer - all warnings and civil penalties
-        layer.getSubLayer(0).setCartoCSS(el.styles.regular);
+        layer.getSubLayer(0).setCartoCSS(el.styles.all);
         layer.getSubLayer(0).setSQL(el.sql.all);
         el.taxLots = layer.getSubLayer(0); //HOLLY - change name later
 
@@ -275,8 +275,8 @@ app.map = (function(w,d, $, _){
   // corresponding cartoCSS & SQL changes to tax lot layer buttons
   // legends are displayed or hidden as needed
   el.taxLotActions = {                          //HOLLY CHANGE NAME LATER
-    regular : function() {
-      changeCartoCSS(el.taxLots, el.styles.regular);
+    all : function() {
+      changeCartoCSS(el.taxLots, el.styles.all);
       changeSQL(el.taxLots, el.sql.all);
       renderLegend(null);
       return true;
@@ -395,12 +395,14 @@ app.map = (function(w,d, $, _){
     // });
   }
 
+  
+//HOLLLY - GEOCODING KEEP
   // geocode search box text and create a marker on the map
   var geocode = function(address) {
-    // reference bounding box for Bushwick to improve geocoder results: 40.678685,-73.942451,40.710247,-73.890266
+    // reference bounding box for DC to improve geocoder results: 40.678685,-73.942451,40.710247,-73.890266
     var bounds = new google.maps.LatLngBounds(
-          new google.maps.LatLng(40.678685,-73.942451), // sw
-          new google.maps.LatLng(40.710247,-73.890266) // ne
+          new google.maps.LatLng(38.788026,-77.218511), // sw - HOLLY CHANGE THIS TO US AFTER TESTINGS
+          new google.maps.LatLng(39.014598,76.794164) // ne
           );    
       el.geocoder.geocode({ 'address': address, 'bounds' : bounds }, function(results, status) {
         if (status == google.maps.GeocoderStatus.OK) {
@@ -414,7 +416,7 @@ app.map = (function(w,d, $, _){
           // add a marker and pan and zoom the map to it
           el.geocoderMarker = new L.marker(latlng).addTo(el.map);
           el.geocoderMarker.bindPopup("<h4>" + results[0].formatted_address + "</h4>" ).openPopup();
-          el.map.setView(latlng, 20);          
+          el.map.setView(latlng, 18);          
           } else {
             console.log('geocode unsuccesful: ', status);
           }
@@ -436,6 +438,8 @@ app.map = (function(w,d, $, _){
       } 
     });
   }
+
+  //HOLLY END OF GEOCODING
 
   // function to render choropleth legends
   var renderLegend = function(data) {
