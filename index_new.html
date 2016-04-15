@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>NYU mHealth Tobacco Map</title>
+  <!-- CSS libraries  -->
+  <link href="css/normalize.css" rel="stylesheet">
+  <link rel="stylesheet" href="bower_components/leaflet/dist/leaflet.css" />
+  <link rel="stylesheet" href="//libs.cartocdn.com/cartodb.js/v3/themes/css/cartodb.css" />
+  <link rel="stylesheet" href="//cartodb.github.io/odyssey.js/sandbox/css/slides.css">
+  <!-- Mapbox JS -->
+  <script src='//api.tiles.mapbox.com/mapbox.js/v2.1.4/mapbox.js'></script>
+  <!-- CSS for UI  -->  
+  <link rel="stylesheet" type="text/css" href="css/styles.css">
+</head>  
+
+<body>
+  
+  <!-- address search box -->
+  <div id="search-container" class="ui">
+    <input type="search" placeholder="Search for an address" id="search-box" class="en"/>
+    <input type="button" id="search-button" />  
+  </div>
+
+  <!-- buttons to toggle zoom -->
+  <div id="ui-zoom" class="ui mini">
+    <a href="#" id="zoom-in"><img src="images/zoom-in.png"/></a><br/>
+    <a href="#" id="zoom-out"><img src="images/zoom-out.png"/></a>
+  </div>
+
+  <!-- GUI -->
+  <div id="ui-container" class="ui">
+
+      <h4 class="en">Warnings</h4>
+      <br/>
+      <a href="#warninglet" id="warninglet" class="button">
+        <span class="en">FDA Warning Letters</span>
+      </a>
+       <a href="#civilpen" id="civilpen" class="button">
+        <span class="en">FDA Civil Money Penalty</span>
+      </a>
+      <hr/>
+
+      <h4 class="en">Smoking Rates</h4>
+      <br/>
+      
+      <input type="checkbox" name="dob" class="regular-checkbox dob" value="new-buildings" id="nb"/>
+        <label for="nb"></label><span class="en">Youth State Smoking Rates</span>
+      <br/>
+      
+      <input type="checkbox" name="dob" class="regular-checkbox dob" value="a1" id="a1" />
+        <label for="a1"></label><span class="en">Adult State Smoking Rates</span>
+      <br/>
+      
+      <hr/>
+  </div> 
