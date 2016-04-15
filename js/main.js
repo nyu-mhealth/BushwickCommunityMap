@@ -113,13 +113,15 @@ app.map = (function(w,d, $, _){
     //   ];
     //END HOLLY - stories - set for DELETE
     
+    //HOLLY GOOD SECTION
+    
     // instantiate the Leaflet map object
     el.map = new L.map('map', params);
     
-    // api key for mapbox tiles
+    // api key for mapbox tiles - HOLLY GET OWN TOKEN
     L.mapbox.accessToken = 'pk.eyJ1IjoiY2hlbnJpY2siLCJhIjoiLVhZMUZZZyJ9.HcNi26J3P-MiOmBKYHIbxw';
 
-    // tileLayer for mapbox basemap
+    // tileLayer for mapbox basemap - HOLLY RESEARCH TILE CREATION
     el.mapboxTiles = L.mapbox.tileLayer('chenrick.map-3gzk4pem');
     el.map.addLayer(el.mapboxTiles); 
 
@@ -127,6 +129,7 @@ app.map = (function(w,d, $, _){
     var attr = "<a href='https://www.mapbox.com/about/maps/' target='_blank'>&copy; Mapbox &copy; OpenStreetMap</a>"
     el.map.attributionControl.addAttribution(attr);
 
+    //HOLLY CHANGE TO USE CENSUS TRACKS
     // feature group to store rheingold geoJSON
     el.featureGroup = L.featureGroup().addTo(el.map);    
     
@@ -147,7 +150,9 @@ app.map = (function(w,d, $, _){
     // makes sure base layers stay below the cartodb data
     el.map.on('baselayerchange', function(e){
       e.layer.bringToBack();
-    })   
+    })  
+
+    //END HOLLY GOOD SECTION 
 
     // load the rheingold GeoJSON layer
     loadRheingold();
