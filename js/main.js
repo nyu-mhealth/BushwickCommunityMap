@@ -8,13 +8,13 @@ app.map = (function(w,d, $, _){
   //  store in an object called 'el' that can be accessed elsewhere
   var el = {
     map : null,
-    //url for viz.json
     cdbURL : null,
     styles: null,
+    styleCur : null,
     sql : null,
     mapboxTiles : null,
     satellite : null,
-    warningpts : null,
+    taxLots : null,
     baseLayers : null,
     dobPermitsA1 : null,
     dobPermitsA2A3 : null,
@@ -36,16 +36,15 @@ app.map = (function(w,d, $, _){
 
   // reference cartocss styles from mapStyles.js
   el.styles = app.mapStyles;
-  // url to cartodb warnings viz json
-  el.cdbURL = "https://legacy.cartodb.com/api/v2/viz/402ae422-001f-11e6-98c1-0ea31932ec1d/viz.json";
+  // url to cartodb FDA Violations map viz json
+  el.cdbURL = "https://legacy.cartodb.com/api/v2/viz/3fe5ca92-0315-11e6-801b-0e31c9be1b51/viz.json";
 
-  //HOLLY - comment out
-  // queries for warning types
+  // queries for warning violatiions
   // sent to cartodb when layer buttons clicked
   el.sql = {
-    all : "SELECT * FROM allwarnings_dc1",
-    warningLetters : "SELECT * FROM allwarnings_dc1 WHERE decisiontype = 'Warning Letter'",
-    civilPenalty : "SELECT * FROM bushwick_pluto14v1 WHERE decisiontype = 'Civil Money Penalty'",
+    all : "SELECT * FROM allwarnings_dc",
+    vacant : "SELECT * FROM allwarnings_dc WHERE decisiontype = '11'",
+    vacant : "SELECT * FROM allwarnings_dc WHERE decisiontype = '11'",
   };
 
   // compile the underscore legend template for rendering map legends for choropleth layers
@@ -61,11 +60,11 @@ app.map = (function(w,d, $, _){
   var initMap = function() {
     // map paramaters to pass to Leaflet
     var params = {
-      center : [38.8963722,-77.0215417],
-      minZoom : 10,
+      center : [40.694631,-73.925028],
+      minZoom : 14,
       maxZoom : 19,
-      zoom : 12 ,
-      //maxBounds : L.latLngBounds([40.675496,-73.957987],[40.714216,-73.877306]), 
+      zoom : 15,
+      maxBounds : L.latLngBounds([40.675496,-73.957987],[40.714216,-73.877306]), 
       zoomControl : false,
       infoControl: false,
       attributionControl: true
@@ -83,7 +82,6 @@ app.map = (function(w,d, $, _){
         }
     });
 
-    //HOLLY Comment out icon for stories
     var gentIcon = L.icon({
       iconUrl: 'https://raw.githubusercontent.com/clhenrick/BushwickCommunityMap/gh-pages/images/gentrification.png',
       iconRetinaUrl: 'https://raw.githubusercontent.com/clhenrick/BushwickCommunityMap/gh-pages/images/gentrification-2x.png',
@@ -149,22 +147,21 @@ app.map = (function(w,d, $, _){
     })   
 
     // load the rheingold GeoJSON layer
-    //HOLLY comment out Reihngold
-    //loadRheingold();
-    // add the warnings layer from cartodb
+    loadRheingold();
+    // add the tax lot layer from cartodb
     getCDBData();
   }
 
   // load the geoJSON boundary for the Rheingold development
-  // function loadRheingold() {
-  //   $.getJSON('./data/rheingold_rezoning_area.geojson', function(json, textStatus) {
-  //       el.rheingoldPoly = L.geoJson(json, {
-  //         style: function(feature){
-  //           return { color: '#000', fill: false, fillOpacity: 0.2, dashArray: '5,10', lineCap: 'square' }
-  //         }
-  //       });
-  //   });
-  // } 
+  function loadRheingold() {
+    $.getJSON('./data/rheingold_rezoning_area.geojson', function(json, textStatus) {
+        el.rheingoldPoly = L.geoJson(json, {
+          style: function(feature){
+            return { color: '#000', fill: false, fillOpacity: 0.2, dashArray: '5,10', lineCap: 'square' }
+          }
+        });
+    });
+  } 
 
   // function to load map pluto tax lot layer and dob permit layer from CartoDB
   var getCDBData = function() {  
@@ -177,7 +174,7 @@ app.map = (function(w,d, $, _){
         // store the map pluto tax lot sublayer
         layer.getSubLayer(0).setCartoCSS(el.styles.regular);
         layer.getSubLayer(0).setSQL(el.sql.all);
-        el.warningpts = layer.getSubLayer(0);
+        el.taxLots = layer.getSubLayer(0);
 
         // create and store the dob permits a1 sublayer
         el.dobPermitsA1 = layer.createSubLayer({
@@ -266,38 +263,38 @@ app.map = (function(w,d, $, _){
   // legends are displayed or hidden as needed
   el.taxLotActions = {
     regular : function() {
-      changeCartoCSS(el.warningpts, el.styles.regular);
-      changeSQL(el.warningpts, el.sql.all);
+      changeCartoCSS(el.taxLots, el.styles.regular);
+      changeSQL(el.taxLots, el.sql.all);
       renderLegend(null);
       return true;
     },
     landuse : function() {
-      changeCartoCSS(el.warningpts, el.styles.landuse);
-      changeSQL(el.warningpts, el.sql.all);
+      changeCartoCSS(el.taxLots, el.styles.landuse);
+      changeSQL(el.taxLots, el.sql.all);
       renderLegend(el.legendData.landuse);
       return true;
     },
     availfar : function() {
-      changeCartoCSS(el.warningpts, el.styles.availFAR);
-      changeSQL(el.warningpts, el.sql.all);
+      changeCartoCSS(el.taxLots, el.styles.availFAR);
+      changeSQL(el.taxLots, el.sql.all);
       renderLegend(el.legendData.availFAR);
       return true;
     },
     rentstab : function() {
-      changeCartoCSS(el.warningpts, el.styles.red);
-      changeSQL(el.warningpts, el.sql.rentStab);
+      changeCartoCSS(el.taxLots, el.styles.red);
+      changeSQL(el.taxLots, el.sql.rentStab);
       renderLegend(null);
       return true;
     },
     vacant : function() {
-      changeCartoCSS(el.warningpts, el.styles.red);
-      changeSQL(el.warningpts, el.sql.vacant);
+      changeCartoCSS(el.taxLots, el.styles.red);
+      changeSQL(el.taxLots, el.sql.vacant);
       renderLegend(null);
       return true;
     },
     yearbuilt : function(){
-      changeCartoCSS(el.warningpts, el.styles.yearbuilt);
-      changeSQL(el.warningpts, el.sql.all);
+      changeCartoCSS(el.taxLots, el.styles.yearbuilt);
+      changeSQL(el.taxLots, el.sql.all);
       renderLegend(el.legendData.yearBuilt);
       return true;
     }
@@ -310,7 +307,7 @@ app.map = (function(w,d, $, _){
       $('.button').removeClass('selected');
       $(this).addClass('selected');
       el.taxLotActions[$(this).attr('id')]();
-      el.warningpts.show();
+      el.taxLots.show();
     }); 
   }
 
@@ -386,10 +383,10 @@ app.map = (function(w,d, $, _){
 
   // geocode search box text and create a marker on the map
   var geocode = function(address) {
-    // HOLLY reference bounding box for DC to improve geocoder results: 38.811572,-77.110709,38.991653,-76.885489
+    // reference bounding box for Bushwick to improve geocoder results: 40.678685,-73.942451,40.710247,-73.890266
     var bounds = new google.maps.LatLngBounds(
-          new google.maps.LatLng(38.811572,-77.110709), // sw
-          new google.maps.LatLng(38.991653,-76.885489) // ne
+          new google.maps.LatLng(40.678685,-73.942451), // sw
+          new google.maps.LatLng(40.710247,-73.890266) // ne
           );    
       el.geocoder.geocode({ 'address': address, 'bounds' : bounds }, function(results, status) {
         if (status == google.maps.GeocoderStatus.OK) {
