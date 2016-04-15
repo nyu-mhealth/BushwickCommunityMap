@@ -281,6 +281,20 @@ app.map = (function(w,d, $, _){
       renderLegend(null);
       return true;
     },
+     warningLetters : function() {
+      changeCartoCSS(el.taxLots, el.styles.warningLetters);
+      changeSQL(el.taxLots, el.sql.warningLetters);
+      renderLegend(el.legendData.warningLetters);
+      return true;
+    },
+     civilPenalties : function() {
+      changeCartoCSS(el.taxLots, el.styles.civilPenalties);
+      changeSQL(el.taxLots, el.sql.civilPenalties);
+      renderLegend(el.legendData.civilPenalties);
+      return true;
+    },
+
+    //HOLLY COMMENT OUT NOT NEEDED LAYERS
     landuse : function() {
       changeCartoCSS(el.taxLots, el.styles.landuse);
       changeSQL(el.taxLots, el.sql.all);
@@ -441,19 +455,21 @@ app.map = (function(w,d, $, _){
 
   //HOLLY END OF GEOCODING
 
+
+//HOLLY RESEARCH LEGENDS
   // function to render choropleth legends
-  var renderLegend = function(data) {
-    if (data === null) { 
-      el.legend.addClass('hidden');
-      return;
-    }
-    var legendData = {
-      title : data.title,
-      items : data.items,// array of objects containing color and values
-    };    
-    el.legend.html(el.template(legendData));
-    if (el.legend.hasClass('hidden')) el.legend.removeClass('hidden');
-  };
+  // var renderLegend = function(data) {
+  //   if (data === null) { 
+  //     el.legend.addClass('hidden');
+  //     return;
+  //   }
+  //   var legendData = {
+  //     title : data.title,
+  //     items : data.items,// array of objects containing color and values
+  //   };    
+  //   el.legend.html(el.template(legendData));
+  //   if (el.legend.hasClass('hidden')) el.legend.removeClass('hidden');
+  // };
 
   // set up custom zoom buttons
   var initZoomButtons = function(){
