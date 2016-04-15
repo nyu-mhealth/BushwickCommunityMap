@@ -154,8 +154,9 @@ app.map = (function(w,d, $, _){
 
     //END HOLLY GOOD SECTION 
 
-    // load the rheingold GeoJSON layer
+    // HOLLY - USE THIS FOR SELECTION DATA - load the rheingold GeoJSON layer
     loadRheingold();
+
     // add the tax lot layer from cartodb
     getCDBData();
   }
@@ -171,7 +172,7 @@ app.map = (function(w,d, $, _){
     });
   } 
 
-  // function to load map pluto tax lot layer and dob permit layer from CartoDB
+  // function to load map all warnings layer from CartoDB
   var getCDBData = function() {  
     cartodb.createLayer(el.map, el.cdbURL, {
         cartodb_logo: false, 
@@ -182,25 +183,26 @@ app.map = (function(w,d, $, _){
         // store the map pluto tax lot sublayer
         layer.getSubLayer(0).setCartoCSS(el.styles.regular);
         layer.getSubLayer(0).setSQL(el.sql.all);
-        el.taxLots = layer.getSubLayer(0);
+        el.taxLots = layer.getSubLayer(0); //HOLLY - change name later
 
+        //HOLLY COMMENT
         // create and store the dob permits a1 sublayer
-        el.dobPermitsA1 = layer.createSubLayer({
-          sql : "SELECT * FROM exp_codedjobs_a1",
-          cartocss : '#exp_codedjobs_a1 {marker-width: 10; marker-fill: hsl(0,0%,30%); marker-line-color: white; marker-line-width: 0.8;}'
-        });
+        // el.dobPermitsA1 = layer.createSubLayer({
+        //   sql : "SELECT * FROM exp_codedjobs_a1",
+        //   cartocss : '#exp_codedjobs_a1 {marker-width: 10; marker-fill: hsl(0,0%,30%); marker-line-color: white; marker-line-width: 0.8;}'
+        // });
 
-        // create and store the dob permits a2a3 sublayer
-        el.dobPermitsA2A3 = layer.createSubLayer({
-          sql : "SELECT * FROM exp_codedjobs_a2a3",
-          cartocss : '#exp_codedjobs_a1 {marker-width: 10; marker-fill: hsl(100,0%,50%); marker-line-color: white; marker-line-width: 0.8;}'
-        });
+        // // create and store the dob permits a2a3 sublayer
+        // el.dobPermitsA2A3 = layer.createSubLayer({
+        //   sql : "SELECT * FROM exp_codedjobs_a2a3",
+        //   cartocss : '#exp_codedjobs_a1 {marker-width: 10; marker-fill: hsl(100,0%,50%); marker-line-color: white; marker-line-width: 0.8;}'
+        // });
 
-        // create and store the dob permits nb sublayer
-        el.dobPermitsNB = layer.createSubLayer({
-          sql : "SELECT * FROM exp_codedjobs_nb",
-          cartocss : '#exp_codedjobs_a1 {marker-width: 10; marker-fill: hsl(350,0%,0%); marker-line-color: white; marker-line-width: 0.8;}'         
-        });
+        // // create and store the dob permits nb sublayer
+        // el.dobPermitsNB = layer.createSubLayer({
+        //   sql : "SELECT * FROM exp_codedjobs_nb",
+        //   cartocss : '#exp_codedjobs_a1 {marker-width: 10; marker-fill: hsl(350,0%,0%); marker-line-color: white; marker-line-width: 0.8;}'         
+        // });
 
         // positions the tool tip in relationship to user's mouse
         // offset it by 5px vertically and horizontally so the mouse arrow won't cover it
