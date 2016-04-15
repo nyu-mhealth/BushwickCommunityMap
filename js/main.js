@@ -43,8 +43,8 @@ app.map = (function(w,d, $, _){
   // sent to cartodb when layer buttons clicked
   el.sql = {
     all : "SELECT * FROM allwarnings_dc",
-    vacant : "SELECT * FROM allwarnings_dc WHERE decisiontype = '11'",
-    vacant : "SELECT * FROM allwarnings_dc WHERE decisiontype = '11'",
+    warningLetters : "SELECT * FROM allwarnings_dc WHERE decisiontype = 'Warning Letter'",
+    civilPenalties : "SELECT * FROM allwarnings_dc WHERE decisiontype = 'Civil Money Penalty'",
   };
 
   //HOLLY - research legend templates
@@ -180,7 +180,7 @@ app.map = (function(w,d, $, _){
         https: true 
       }, 
       function(layer) {
-        // store the map pluto tax lot sublayer
+        // store the warnings sublayer - all warnings and civil penalties
         layer.getSubLayer(0).setCartoCSS(el.styles.regular);
         layer.getSubLayer(0).setSQL(el.sql.all);
         el.taxLots = layer.getSubLayer(0); //HOLLY - change name later
@@ -250,6 +250,8 @@ app.map = (function(w,d, $, _){
 
         // } // end sublayer for loop
 
+      
+      //HOLLY KEEP THIS
       // add the cdb layer to the map
       el.map.addLayer(layer, false);
       // make sure the base layer stays below the cdb layer      
@@ -272,7 +274,7 @@ app.map = (function(w,d, $, _){
 
   // corresponding cartoCSS & SQL changes to tax lot layer buttons
   // legends are displayed or hidden as needed
-  el.taxLotActions = {
+  el.taxLotActions = {                          //HOLLY CHANGE NAME LATER
     regular : function() {
       changeCartoCSS(el.taxLots, el.styles.regular);
       changeSQL(el.taxLots, el.sql.all);
