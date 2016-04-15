@@ -383,15 +383,16 @@ app.map = (function(w,d, $, _){
       };
     });        
 
+    //HOLLY - COMMENT OUT STORIES
     // toggle personal stories
     // to do: add stories!
-    $ps.change(function(){
-      if ($ps.is(':checked')) {
-        console.log('show stories');
-      } else {
-        console.log('hide stories');
-      }
-    });
+    // $ps.change(function(){
+    //   if ($ps.is(':checked')) {
+    //     console.log('show stories');
+    //   } else {
+    //     console.log('hide stories');
+    //   }
+    // });
   }
 
   // geocode search box text and create a marker on the map
