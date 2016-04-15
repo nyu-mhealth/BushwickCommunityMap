@@ -12,6 +12,7 @@ app.mapStyles = (function(){
                                   'marker-placement: point;' +
                                   ' marker-type: ellipse;' +
                                   'marker-width: 10;' +
+                                  'marker-fill: #FF9900;' +
                                   'marker-allow-overlap: true;' +
                                 '}',
 
