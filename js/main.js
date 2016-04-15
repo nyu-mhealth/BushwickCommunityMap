@@ -213,41 +213,42 @@ app.map = (function(w,d, $, _){
               });
           };                                
 
+        //HOLLY - Not sure what to do here. Infowindow - maybe change later
         // hide and set interactivity on the DOB permit layers
         var num_sublayers = layer.getSubLayerCount();
-        for (var i = 1; i < num_sublayers; i++) { 
-          // turn on interactivity for mousing events
-          layer.getSubLayer(i).setInteraction(true);
-          // tell cdb what columns to pass for interactivity
-          layer.getSubLayer(i).setInteractivity('address, jt_description, ownername, ownerphone, ownerbusin, existingst, proposedst');                    
-          // when the user mouses over the dob permit display html & data in a tool tip
-          layer.getSubLayer(i).on('featureOver', function(e, pos, latlng, data) {
-            $('#tool-tip').html(
-                                // text to display when user hovers on dob permit layers
-                                '<h4>DOB Permit Info</h4>' +
-                                '<hr>' +
-                                '<p><strong>Address:</strong> '  + data.address + '</p>' +
-                                '<p><strong>Job Description:</strong> ' + data.jt_description + '</p>' +
-                                '<p><strong>Owner Name:</strong> '  + data.ownername + '</p>' +
-                                '<p><strong>Owner Business:</strong> '  + data.ownerbusin + '</p>' +
-                                '<p><strong>Owner Phone:</strong> '  + data.ownerphone + '</p>' +
-                                '<p><strong>Existing Building Stories:</strong> '  + data.existingst + '</p>' +
-                                '<p><strong>Proposed Building Stories:</strong> '  + data.proposedst + '</p>'
-                                );
-            $(document).bind('mousemove', event);
-            $('#tool-tip').show();            
-          });
+        // for (var i = 1; i < num_sublayers; i++) { 
+        //   // turn on interactivity for mousing events
+        //   layer.getSubLayer(i).setInteraction(true);
+        //   // tell cdb what columns to pass for interactivity
+        //   layer.getSubLayer(i).setInteractivity('address, jt_description, ownername, ownerphone, ownerbusin, existingst, proposedst');                    
+        //   // when the user mouses over the dob permit display html & data in a tool tip
+        //   layer.getSubLayer(i).on('featureOver', function(e, pos, latlng, data) {
+        //     $('#tool-tip').html(
+        //                         // text to display when user hovers on dob permit layers
+        //                         '<h4>DOB Permit Info</h4>' +
+        //                         '<hr>' +
+        //                         '<p><strong>Address:</strong> '  + data.address + '</p>' +
+        //                         '<p><strong>Job Description:</strong> ' + data.jt_description + '</p>' +
+        //                         '<p><strong>Owner Name:</strong> '  + data.ownername + '</p>' +
+        //                         '<p><strong>Owner Business:</strong> '  + data.ownerbusin + '</p>' +
+        //                         '<p><strong>Owner Phone:</strong> '  + data.ownerphone + '</p>' +
+        //                         '<p><strong>Existing Building Stories:</strong> '  + data.existingst + '</p>' +
+        //                         '<p><strong>Proposed Building Stories:</strong> '  + data.proposedst + '</p>'
+        //                         );
+        //     $(document).bind('mousemove', event);
+        //     $('#tool-tip').show();            
+        //   });
           
-          // when the user mouses out remove the tool tip
-          layer.getSubLayer(i).on('featureOut', function(e,pos,latlng,data){           
-            $('#tool-tip').hide();
-            $(document).unbind('mousemove', event, false);
-          });
+        //   // when the user mouses out remove the tool tip
+        //   layer.getSubLayer(i).on('featureOut', function(e,pos,latlng,data){           
+        //     $('#tool-tip').hide();
+        //     $(document).unbind('mousemove', event, false);
+        //   });
 
-          // hide the dob permit layers when map loads
-          layer.getSubLayer(i).hide();
+        //   // hide the dob permit layers when map loads
+        //   layer.getSubLayer(i).hide();
 
-        } // end sublayer for loop
+        // } // end sublayer for loop
 
       // add the cdb layer to the map
       el.map.addLayer(layer, false);
