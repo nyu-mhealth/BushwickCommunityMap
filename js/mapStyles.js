@@ -3,35 +3,42 @@ var app = app || {};
 
 app.mapStyles = (function(){
   return {
-    // default style, all lots are the same color
+    
+    // Category style, warning letters orange / civil penalties red
     all : '#allwarnings_dc {' +
-                                  'marker-fill-opacity: 0.9;' +
-                                  'marker-line-color: #FFF;' +
-                                  'marker-line-width: 1;' +
-                                  'marker-line-opacity: 1;' +
-                                  'marker-placement: point;' +
-                                  ' marker-type: ellipse;' +
-                                  'marker-width: 10;' +
-                                  'marker-fill: #FF9900;' +
-                                  'marker-allow-overlap: true;' +
-                                '}',
+                             'marker-fill-opacity: 0.9;' +
+                             'marker-line-color: #FFF;' +
+                             'marker-line-width: 1;' +
+                             'marker-line-opacity: 1;' +
+                             'marker-placement: point;' +
+                             'marker-type: ellipse;' +
+                             'marker-width: 10;' +
+                             'marker-allow-overlap: true;' +
+                          '}' +
 
-
-    // default style, all lots are the same color
-    all : '#warningLetters {' +
-                                  'marker-fill-opacity: 0.9;' +
-                                  'marker-line-color: #FFF;' +
-                                  'marker-line-width: 1;' +
-                                  'marker-line-opacity: 1;' +
-                                  'marker-placement: point;' +
-                                  ' marker-type: ellipse;' +
-                                  'marker-width: 10;' +
-                                  'marker-fill: #ffe800;' +
-                                  'marker-allow-overlap: true;' +
-                                '}',
+          '#allwarnings_dc[decisiontype="Civil Money Penalty"] {' +
+                                                                 'marker-fill: #B40903;' +
+                                                              '}' +
+          '#allwarnings_dc[decisiontype="Warning Letter"] {' +
+                                                             'marker-fill: #FF9900;' +
+                                                          '}',
 
     // default style, all lots are the same color
-    all : '#civilPenalties {' +
+    // all : '#allwarnings_dc {' +
+    //                               'marker-fill-opacity: 0.9;' +
+    //                               'marker-line-color: #FFF;' +
+    //                               'marker-line-width: 1;' +
+    //                               'marker-line-opacity: 1;' +
+    //                               'marker-placement: point;' +
+    //                               ' marker-type: ellipse;' +
+    //                               'marker-width: 10;' +
+    //                               'marker-fill: #FF9900;' +
+    //                               'marker-allow-overlap: true;' +
+    //                             '}',
+
+
+    // just warning letters style - orange
+    warningLetters : '#warningLetters {' +
                                   'marker-fill-opacity: 0.9;' +
                                   'marker-line-color: #FFF;' +
                                   'marker-line-width: 1;' +
@@ -40,6 +47,19 @@ app.mapStyles = (function(){
                                   ' marker-type: ellipse;' +
                                   'marker-width: 10;' +
                                   'marker-fill: #850200;' +
+                                  'marker-allow-overlap: true;' +
+                                '}',
+
+    // just civial penalties style - red
+    civilPenalties : '#civilPenalties {' +
+                                  'marker-fill-opacity: 0.9;' +
+                                  'marker-line-color: #FFF;' +
+                                  'marker-line-width: 1;' +
+                                  'marker-line-opacity: 1;' +
+                                  'marker-placement: point;' +
+                                  ' marker-type: ellipse;' +
+                                  'marker-width: 10;' +
+                                  'marker-fill: #229A00;' +
                                   'marker-allow-overlap: true;' +
                                 '}',
     // red highlight                            
