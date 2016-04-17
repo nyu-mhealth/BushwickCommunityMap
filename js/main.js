@@ -14,7 +14,7 @@ app.map = (function(w,d, $, _){
     sql : null,
     mapboxTiles : null,
     satellite : null,
-    taxLots : null,
+    fdaWarnings : null,
     fdaContracts : null,
     baseLayers : null,
     dobPermitsA1 : null,
@@ -154,7 +154,7 @@ app.map = (function(w,d, $, _){
         // store the warnings sublayer - all warnings and civil penalties
         layer.getSubLayer(0).setCartoCSS(el.styles.all);
         layer.getSubLayer(0).setSQL(el.sql.all);
-        el.taxLots = layer.getSubLayer(0); //HOLLY - change name later
+        el.fdaWarnings = layer.getSubLayer(0); //HOLLY - change name later
 
         //NOT WORKING
         // store the warnings sublayer - all warnings and civil penalties
@@ -253,20 +253,20 @@ app.map = (function(w,d, $, _){
   // legends are displayed or hidden as needed
   el.taxLotActions = {                          //HOLLY CHANGE NAME LATER
     all : function() {
-      changeCartoCSS(el.taxLots, el.styles.all);
-      changeSQL(el.taxLots, el.sql.all);
+      changeCartoCSS(el.fdaWarnings, el.styles.all);
+      changeSQL(el.fdaWarnings, el.sql.all);
       renderLegend(null);
       return true;
     },
      warningLetters : function() {
-      changeCartoCSS(el.taxLots, el.styles.warningLetters);
-      changeSQL(el.taxLots, el.sql.warningLetters);
+      changeCartoCSS(el.fdaWarnings, el.styles.warningLetters);
+      changeSQL(el.fdaWarnings, el.sql.warningLetters);
       renderLegend(el.legendData.warningLetters);
       return true;
     },
      civilPenalties : function() {
-      changeCartoCSS(el.taxLots, el.styles.civilPenalties);
-      changeSQL(el.taxLots, el.sql.civilPenalties);
+      changeCartoCSS(el.fdaWarnings, el.styles.civilPenalties);
+      changeSQL(el.fdaWarnings, el.sql.civilPenalties);
       renderLegend(el.legendData.civilPenalties);
       return true;
     },
@@ -285,7 +285,7 @@ app.map = (function(w,d, $, _){
       $('.button').removeClass('selected');
       $(this).addClass('selected');
       el.taxLotActions[$(this).attr('id')]();
-      el.taxLots.show();
+      el.fdaWarnings.show();
     }); 
   }
 
