@@ -31,7 +31,7 @@ app.map = (function(w,d, $, _){
     geocoder : null,
     geocoderMarker : null, 
     legend : null,
-    taxLotActions : null,
+    fdaWarningsActions : null,
     story : null
   };
 
@@ -251,7 +251,7 @@ app.map = (function(w,d, $, _){
 
   // corresponding cartoCSS & SQL changes to tax lot layer buttons
   // legends are displayed or hidden as needed
-  el.taxLotActions = {                          //HOLLY CHANGE NAME LATER
+  el.fdaWarningsActions = {                          //HOLLY CHANGE NAME LATER
     all : function() {
       changeCartoCSS(el.fdaWarnings, el.styles.all);
       changeSQL(el.fdaWarnings, el.sql.all);
@@ -284,7 +284,7 @@ app.map = (function(w,d, $, _){
       // e.preventDefault(); 
       $('.button').removeClass('selected');
       $(this).addClass('selected');
-      el.taxLotActions[$(this).attr('id')]();
+      el.fdaWarningsActions[$(this).attr('id')]();
       el.fdaWarnings.show();
     }); 
   }
