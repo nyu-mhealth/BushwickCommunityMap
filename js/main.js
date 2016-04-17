@@ -155,22 +155,36 @@ app.map = (function(w,d, $, _){
     //END HOLLY GOOD SECTION 
 
     // HOLLY - USE THIS FOR SELECTION DATA - load the rheingold GeoJSON layer
-    loadRheingold();
+    // loadRheingold();
+
+     // HOLLY - USE THIS FOR SELECTION DATA - load the loadTracts GeoJSON layer - unomment later
+    // loadTracts();
+
 
     // add the tax lot layer from cartodb
     getCDBData();
   }
 
   // load the geoJSON boundary for the Rheingold development
-  function loadRheingold() {
-    $.getJSON('./data/rheingold_rezoning_area.geojson', function(json, textStatus) {
-        el.rheingoldPoly = L.geoJson(json, {
-          style: function(feature){
-            return { color: '#000', fill: false, fillOpacity: 0.2, dashArray: '5,10', lineCap: 'square' }
-          }
-        });
-    });
-  } 
+  // function loadRheingold() {
+  //   $.getJSON('./data/rheingold_rezoning_area.geojson', function(json, textStatus) {
+  //       el.rheingoldPoly = L.geoJson(json, {
+  //         style: function(feature){
+  //           return { color: '#000', fill: false, fillOpacity: 0.2, dashArray: '5,10', lineCap: 'square' }
+  //         }
+  //       });
+  //   });
+  // } 
+
+  //HOLLY - for createlayer from geojson calls - uncomment when working on queries
+  // function loadTracts() {
+  //     // create the layer and add to the map, then will be filled with data
+  //     el.tractsLayer = L.geoJson().addTo(el.map);
+  //     el.sqlTrct = new cartodb.SQL({ user: 'legacy', format: 'geojson' });
+  //     el.sqlTrct.execute("select * from dc_tracts_2014").done(function(geojson) {
+  //         el.tractsLayer.addData(geojson);
+  //       });
+  // } 
 
   // function to load map all warnings layer from CartoDB
   var getCDBData = function() {  
@@ -295,36 +309,36 @@ app.map = (function(w,d, $, _){
     },
 
     //HOLLY COMMENT OUT NOT NEEDED LAYERS
-    landuse : function() {
-      changeCartoCSS(el.taxLots, el.styles.landuse);
-      changeSQL(el.taxLots, el.sql.all);
-      renderLegend(el.legendData.landuse);
-      return true;
-    },
-    availfar : function() {
-      changeCartoCSS(el.taxLots, el.styles.availFAR);
-      changeSQL(el.taxLots, el.sql.all);
-      renderLegend(el.legendData.availFAR);
-      return true;
-    },
-    rentstab : function() {
-      changeCartoCSS(el.taxLots, el.styles.red);
-      changeSQL(el.taxLots, el.sql.rentStab);
-      renderLegend(null);
-      return true;
-    },
-    vacant : function() {
-      changeCartoCSS(el.taxLots, el.styles.red);
-      changeSQL(el.taxLots, el.sql.vacant);
-      renderLegend(null);
-      return true;
-    },
-    yearbuilt : function(){
-      changeCartoCSS(el.taxLots, el.styles.yearbuilt);
-      changeSQL(el.taxLots, el.sql.all);
-      renderLegend(el.legendData.yearBuilt);
-      return true;
-    }
+    // landuse : function() {
+    //   changeCartoCSS(el.taxLots, el.styles.landuse);
+    //   changeSQL(el.taxLots, el.sql.all);
+    //   renderLegend(el.legendData.landuse);
+    //   return true;
+    // },
+    // availfar : function() {
+    //   changeCartoCSS(el.taxLots, el.styles.availFAR);
+    //   changeSQL(el.taxLots, el.sql.all);
+    //   renderLegend(el.legendData.availFAR);
+    //   return true;
+    // },
+    // rentstab : function() {
+    //   changeCartoCSS(el.taxLots, el.styles.red);
+    //   changeSQL(el.taxLots, el.sql.rentStab);
+    //   renderLegend(null);
+    //   return true;
+    // },
+    // vacant : function() {
+    //   changeCartoCSS(el.taxLots, el.styles.red);
+    //   changeSQL(el.taxLots, el.sql.vacant);
+    //   renderLegend(null);
+    //   return true;
+    // },
+    // yearbuilt : function(){
+    //   changeCartoCSS(el.taxLots, el.styles.yearbuilt);
+    //   changeSQL(el.taxLots, el.sql.all);
+    //   renderLegend(el.legendData.yearBuilt);
+    //   return true;
+    // }
   };
 
   // add tax lot layer button event listeners
