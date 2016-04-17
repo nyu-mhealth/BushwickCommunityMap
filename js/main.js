@@ -45,6 +45,7 @@ app.map = (function(w,d, $, _){
     all : "SELECT * FROM allwarnings_dc",
     warningLetters : "SELECT * FROM allwarnings_dc WHERE decisiontype = 'Warning Letter'",
     civilPenalties : "SELECT * FROM allwarnings_dc WHERE decisiontype = 'Civil Money Penalty'",
+    fdaContracts : "SELECT * FROM fda_state_contracts",
   };
 
   //HOLLY - research legend templates
@@ -166,15 +167,15 @@ app.map = (function(w,d, $, _){
   }
 
   // load the geoJSON boundary for the Rheingold development
-  // function loadRheingold() {
-  //   $.getJSON('./data/rheingold_rezoning_area.geojson', function(json, textStatus) {
-  //       el.rheingoldPoly = L.geoJson(json, {
-  //         style: function(feature){
-  //           return { color: '#000', fill: false, fillOpacity: 0.2, dashArray: '5,10', lineCap: 'square' }
-  //         }
-  //       });
-  //   });
-  // } 
+  function loadRheingold() {
+    $.getJSON('./data/rheingold_rezoning_area.geojson', function(json, textStatus) {
+        el.rheingoldPoly = L.geoJson(json, {
+          style: function(feature){
+            return { color: '#000', fill: false, fillOpacity: 0.2, dashArray: '5,10', lineCap: 'square' }
+          }
+        });
+    });
+  } 
 
   //HOLLY - for createlayer from geojson calls - uncomment when working on queries
   // function loadTracts() {
@@ -194,6 +195,11 @@ app.map = (function(w,d, $, _){
         https: true 
       }, 
       function(layer) {
+        // store the warnings sublayer - all warnings and civil penalties
+        layer.getSubLayer(0).setCartoCSS(el.styles.all);
+        layer.getSubLayer(0).setSQL(el.sql.all);
+        el.taxLots = layer.getSubLayer(0); //HOLLY - change name later
+
         // store the warnings sublayer - all warnings and civil penalties
         layer.getSubLayer(0).setCartoCSS(el.styles.all);
         layer.getSubLayer(0).setSQL(el.sql.all);
