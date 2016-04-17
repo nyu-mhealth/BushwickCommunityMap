@@ -1,7 +1,7 @@
 /*** Global object that contains the app ***/
 var app = app || {};
 
-// keep our map stuff in a part of the app object as to not pollute the global name space
+// keep map stuff in a part of the app object as to not pollute the global name space
 app.map = (function(w,d, $, _){
 
   //  define all local variables for map parts and layers 
@@ -15,6 +15,7 @@ app.map = (function(w,d, $, _){
     mapboxTiles : null,
     satellite : null,
     taxLots : null,
+    fdaContracts : null,
     baseLayers : null,
     dobPermitsA1 : null,
     dobPermitsA2A3 : null,
@@ -45,7 +46,8 @@ app.map = (function(w,d, $, _){
     all : "SELECT * FROM allwarnings_dc",
     warningLetters : "SELECT * FROM allwarnings_dc WHERE decisiontype = 'Warning Letter'",
     civilPenalties : "SELECT * FROM allwarnings_dc WHERE decisiontype = 'Civil Money Penalty'",
-    fdaContracts : "SELECT * FROM fda_state_contracts",
+    //NOT WORKING
+    // allContracts : "SELECT * FROM fda_state_contracts",
   };
 
   //HOLLY - research legend templates
@@ -84,35 +86,6 @@ app.map = (function(w,d, $, _){
         }
     });
 
-    //HOLLY - icons for stories - set for DELETE
-    // var gentIcon = L.icon({
-    //   iconUrl: 'https://raw.githubusercontent.com/clhenrick/BushwickCommunityMap/gh-pages/images/gentrification.png',
-    //   iconRetinaUrl: 'https://raw.githubusercontent.com/clhenrick/BushwickCommunityMap/gh-pages/images/gentrification-2x.png',
-    //   iconSize: [30, 30],
-    //   iconAnchor: [15, 15],
-    //   popupAnchor: [0, -15],
-    // });    
-
-    // lat lngs for locations of stories
-    // el.bushwick = new L.LatLng(40.694631,-73.925028);
-    // el.rheingold = new L.LatLng(40.700740, -73.934209);
-    // el.colony = new L.LatLng(40.695867,-73.928153);
-    // el.linden = new L.LatLng(40.692776,-73.919756);
-    // el.groveSt = new L.LatLng(40.700082, -73.913740);
-
-    // el.colonyMarker = new L.marker(el.colony, {icon: gentIcon}).bindPopup('<a class="colony1209 story" href="#" data-slide="5">Colony 1209</a>');
-    // el.groveStMarker = new L.marker(el.groveSt, {icon: gentIcon}).bindPopup('358 Grove St. Condos');
-    // el.rheingoldMarker = new L.marker(el.rheingold, {icon: gentIcon}).bindPopup('<a class="rheingold story" href="#" data-slide="1">Rheingold Rezoning</a>');
-    // el.lindenMarker = new L.marker(el.linden, {icon: gentIcon}).bindPopup('<a class="98linden story" href="#" data-slide="8">98 Linden</a>' );
-    
-    // // array to store sites of gentrification
-    // el.sitesGent = [
-    //     el.colonyMarker,
-    //     el.groveStMarker,
-    //     el.rheingoldMarker,
-    //     el.lindenMarker
-    //   ];
-    //END HOLLY - stories - set for DELETE
     
     //HOLLY GOOD SECTION
     
@@ -153,29 +126,8 @@ app.map = (function(w,d, $, _){
       e.layer.bringToBack();
     })  
 
-    //END HOLLY GOOD SECTION 
-
-    // HOLLY - USE THIS FOR SELECTION DATA - load the rheingold GeoJSON layer
-    // loadRheingold();
-
      // HOLLY - USE THIS FOR SELECTION DATA - load the loadTracts GeoJSON layer - unomment later
     // loadTracts();
-
-
-    // add the tax lot layer from cartodb
-    getCDBData();
-  }
-
-  // load the geoJSON boundary for the Rheingold development
-  function loadRheingold() {
-    $.getJSON('./data/rheingold_rezoning_area.geojson', function(json, textStatus) {
-        el.rheingoldPoly = L.geoJson(json, {
-          style: function(feature){
-            return { color: '#000', fill: false, fillOpacity: 0.2, dashArray: '5,10', lineCap: 'square' }
-          }
-        });
-    });
-  } 
 
   //HOLLY - for createlayer from geojson calls - uncomment when working on queries
   // function loadTracts() {
@@ -186,6 +138,10 @@ app.map = (function(w,d, $, _){
   //         el.tractsLayer.addData(geojson);
   //       });
   // } 
+
+  // add the warnings layer from cartodb
+    getCDBData();
+  }
 
   // function to load map all warnings layer from CartoDB
   var getCDBData = function() {  
@@ -200,12 +156,13 @@ app.map = (function(w,d, $, _){
         layer.getSubLayer(0).setSQL(el.sql.all);
         el.taxLots = layer.getSubLayer(0); //HOLLY - change name later
 
+        //NOT WORKING
         // store the warnings sublayer - all warnings and civil penalties
-        layer.getSubLayer(0).setCartoCSS(el.styles.all);
-        layer.getSubLayer(0).setSQL(el.sql.all);
-        el.taxLots = layer.getSubLayer(0); //HOLLY - change name later
+        // layer.getSubLayer(1).setCartoCSS(el.styles.allContracts);
+        // layer.getSubLayer(1).setSQL(el.sql.allContracts);
+        // el.fdaContracts = layer.getSubLayer(1); //HOLLY - change name later
 
-        //HOLLY COMMENT
+        //HOLLY COMMENT - USE THIS FOR CHECKBOX LAYERS OTHER THAN WARNINGS
         // create and store the dob permits a1 sublayer
         // el.dobPermitsA1 = layer.createSubLayer({
         //   sql : "SELECT * FROM exp_codedjobs_a1",
@@ -233,7 +190,7 @@ app.map = (function(w,d, $, _){
               });
           };                                
 
-        //HOLLY - Not sure what to do here. Infowindow - maybe change later
+        //HOLLY - LAYERS OTHER THAN WARNINGS - EDIT AND TEST
         // hide and set interactivity on the DOB permit layers
         var num_sublayers = layer.getSubLayerCount();
         // for (var i = 1; i < num_sublayers; i++) { 
@@ -313,36 +270,10 @@ app.map = (function(w,d, $, _){
       renderLegend(el.legendData.civilPenalties);
       return true;
     },
-
-    //HOLLY COMMENT OUT NOT NEEDED LAYERS
-    // landuse : function() {
-    //   changeCartoCSS(el.taxLots, el.styles.landuse);
-    //   changeSQL(el.taxLots, el.sql.all);
-    //   renderLegend(el.legendData.landuse);
-    //   return true;
-    // },
-    // availfar : function() {
-    //   changeCartoCSS(el.taxLots, el.styles.availFAR);
-    //   changeSQL(el.taxLots, el.sql.all);
-    //   renderLegend(el.legendData.availFAR);
-    //   return true;
-    // },
-    // rentstab : function() {
-    //   changeCartoCSS(el.taxLots, el.styles.red);
-    //   changeSQL(el.taxLots, el.sql.rentStab);
-    //   renderLegend(null);
-    //   return true;
-    // },
-    // vacant : function() {
-    //   changeCartoCSS(el.taxLots, el.styles.red);
-    //   changeSQL(el.taxLots, el.sql.vacant);
-    //   renderLegend(null);
-    //   return true;
-    // },
-    // yearbuilt : function(){
-    //   changeCartoCSS(el.taxLots, el.styles.yearbuilt);
-    //   changeSQL(el.taxLots, el.sql.all);
-    //   renderLegend(el.legendData.yearBuilt);
+    //  allContracts : function() {
+    //   changeCartoCSS(el.fdaContracts, el.styles.allContracts);
+    //   changeSQL(el.fdaContracts, el.sql.allContracts);
+    //   renderLegend(el.legendData.allContracts);
     //   return true;
     // }
   };
@@ -415,20 +346,9 @@ app.map = (function(w,d, $, _){
         }
         el.featureGroup.removeLayer(el.rheingoldPoly);
       };
-    });        
+    }); 
 
-    //HOLLY - COMMENT OUT STORIES
-    // toggle personal stories
-    // to do: add stories!
-    // $ps.change(function(){
-    //   if ($ps.is(':checked')) {
-    //     console.log('show stories');
-    //   } else {
-    //     console.log('hide stories');
-    //   }
-    // });
   }
-
   
 //HOLLLY - GEOCODING KEEP
   // geocode search box text and create a marker on the map
@@ -472,7 +392,6 @@ app.map = (function(w,d, $, _){
       } 
     });
   }
-
   //HOLLY END OF GEOCODING
 
 
@@ -616,7 +535,7 @@ app.map = (function(w,d, $, _){
     initCheckboxes();
     searchAddress();
     initZoomButtons();
-    app.intro.init();    
+    // app.intro.init();    
   }
 
   // only return init() and the stuff in the el object
