@@ -47,7 +47,7 @@ app.map = (function(w,d, $, _){
     warningLetters : "SELECT * FROM allwarnings_dc WHERE decisiontype = 'Warning Letter'",
     civilPenalties : "SELECT * FROM allwarnings_dc WHERE decisiontype = 'Civil Money Penalty'",
     //NOT WORKING
-    // allContracts : "SELECT * FROM fda_state_contracts",
+    allContracts : "SELECT * FROM fda_state_contracts",
   };
 
   //HOLLY - research legend templates
@@ -162,6 +162,29 @@ app.map = (function(w,d, $, _){
         // layer.getSubLayer(1).setSQL(el.sql.allContracts);
         // el.fdaContracts = layer.getSubLayer(1); //HOLLY - change name later
 
+        //HOLLY COMMENT - TEST MAKING CONTRACTS LAYER
+        //create and store the dob permits a1 sublayer
+        //NOT WORKING
+        // el.dobPermitsA1 = layer.createSubLayer();
+        // el.dobPermitsA1.setSQL(el.sql.allContracts);
+
+        //TRY THIS
+          el.dobPermitsNB = layer.createSubLayer({
+          sql : "SELECT * FROM fda_state_contracts",
+          cartocss : "#allContracts{polygon-fill: #FFFFB2;" +
+                                        "polygon-opacity: 0.7;" +
+                                        "line-color: #FFF;" +
+                                        "line-width: 0.5;" +
+                                        "line-opacity: 1;" +
+                                        "}" +
+                                        '#fda_state_contracts [ most_recent_award_amount <= 4334123] {polygon-fill: #BD0026;}' +
+                                        '#fda_state_contracts [ most_recent_award_amount <= 3491329.2] {polygon-fill: #F03B20;}' +
+                                        '#fda_state_contracts [ most_recent_award_amount <= 2648535.4000000004] {polygon-fill: #FD8D3C;}' +
+                                        '#fda_state_contracts [ most_recent_award_amount <= 1805741.6] {polygon-fill: #FECC5C;}' +
+                                        '#fda_state_contracts [ most_recent_award_amount <= 962947.8] {polygon-fill: #FFFFB2;}',
+        });
+
+
         //HOLLY COMMENT - USE THIS FOR CHECKBOX LAYERS OTHER THAN WARNINGS
         // create and store the dob permits a1 sublayer
         // el.dobPermitsA1 = layer.createSubLayer({
@@ -222,8 +245,9 @@ app.map = (function(w,d, $, _){
         //     $(document).unbind('mousemove', event, false);
         //   });
 
-        //   // hide the dob permit layers when map loads
-        //   layer.getSubLayer(i).hide();
+          // hide the FDA Layer when map loads
+          //layer.getSubLayer(i).hide();
+          el.dobPermitsNB.hide();
 
         // } // end sublayer for loop
 
@@ -286,6 +310,7 @@ app.map = (function(w,d, $, _){
       $(this).addClass('selected');
       el.fdaWarningsActions[$(this).attr('id')]();
       el.fdaWarnings.show();
+
     }); 
   }
 
