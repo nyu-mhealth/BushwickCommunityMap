@@ -15,7 +15,6 @@ app.map = (function(w,d, $, _){
     mapboxTiles : null,
     satellite : null,
     fdaWarnings : null,
-    fdaCivil : null,
     fdaContracts : null,
     baseLayers : null,
     dobPermitsA1 : null,
@@ -88,6 +87,8 @@ app.map = (function(w,d, $, _){
     });
 
     
+    //HOLLY GOOD SECTION
+    
     // instantiate the Leaflet map object
     el.map = new L.map('map', params);
     
@@ -98,8 +99,8 @@ app.map = (function(w,d, $, _){
     el.mapboxTiles = L.mapbox.tileLayer('chenrick.map-3gzk4pem');
     el.map.addLayer(el.mapboxTiles); 
 
-    // add mapbox attribution
-    var attr = "<a href='https://www.mapbox.com/about/maps/' target='_blank'>&copy; Mapbox &copy</a>"
+    // add mapbox and osm attribution
+    var attr = "<a href='https://www.mapbox.com/about/maps/' target='_blank'>&copy; Mapbox &copy; OpenStreetMap</a>"
     el.map.attributionControl.addAttribution(attr);
 
     //HOLLY CHANGE TO USE CENSUS TRACKS
@@ -148,7 +149,10 @@ app.map = (function(w,d, $, _){
         https: true 
       }, 
       function(layer) {
-
+        // store the warnings sublayer - all warnings and civil penalties
+        layer.getSubLayer(0).setCartoCSS(el.styles.warningLetters);
+        layer.getSubLayer(0).setSQL(el.sql.warningLetters);
+        el.fdaWarnings = layer.getSubLayer(0); //HOLLY - change name later
 
 
         //HOLLY - CREATE FDA LAYER ON THE FLY
@@ -167,22 +171,6 @@ app.map = (function(w,d, $, _){
                                         '#fda_state_contracts [ most_recent_award_amount <= 962947.8] {polygon-fill: #FFFFB2;}',
         });
 
-
-
-        // store the warnings sublayer - all warnings and civil penalties
-        // layer.getSubLayer(0).setCartoCSS(el.styles.all);
-        // layer.getSubLayer(0).setSQL(el.sql.all);
-        layer.getSubLayer(0).setCartoCSS(el.styles.warningLetters);
-        layer.getSubLayer(0).setSQL(el.sql.warningLetters);
-        el.fdaWarnings = layer.getSubLayer(0); 
-
-
-        layer.getSubLayer(1).setCartoCSS(el.styles.civilPenalties);
-        layer.getSubLayer(1).setSQL(el.sql.civilPenalties);
-        el.fdaCivil = layer.getSubLayer(1); 
-
-        var num_sublayers = layer.getSubLayerCount();
-        alert("Number of layers is " + num_sublayers);
 
         //HOLLY COMMENT - USE THIS FOR CHECKBOX LAYERS OTHER THAN WARNINGS
         // create and store the dob permits a1 sublayer
@@ -249,21 +237,12 @@ app.map = (function(w,d, $, _){
          
         // } // end sublayer for loop
 
-      //HOLLY CHANGE VARIABLE NAME - Hide FDA Contracts when load
-      //el.dobPermitsNB.hide();
 
       // HOLLY hide the FDA Layer when map loads
-      el.fdaWarnings.hide();
-
-      // HOLLY hide the FDA Layer when map loads
-      el.fdaCivil.hide();
-
-
+      el.dobPermitsNB.hide();
 
       // add the cdb layer to the map
       el.map.addLayer(layer, false);
-      // alert("Here is the layer being added to map " + layer.);
-
 
       // make sure the base layer stays below the cdb layer      
       el.mapboxTiles.bringToBack();
@@ -307,20 +286,20 @@ app.map = (function(w,d, $, _){
   };
 
   // add FDA WARNINGS layer button event listeners
-  // var initButtons = function() {
-  //   $('.button').click(function(e) {
-  //     // e.preventDefault(); 
-  //     $('.button').removeClass('selected');
-  //     $(this).addClass('selected');
-  //     el.fdaWarningsActions[$(this).attr('id')]();
-  //     el.fdaWarnings.show();
+  var initButtons = function() {
+    $('.button').click(function(e) {
+      // e.preventDefault(); 
+      $('.button').removeClass('selected');
+      $(this).addClass('selected');
+      el.fdaWarningsActions[$(this).attr('id')]();
+      el.fdaWarnings.show();
 
-  //   }); 
-  // }
+    }); 
+  }
 
   // HOLLY - FOR EXTRA LAYERS toggle additional layers based on check box boolean value
   var initCheckboxes = function() {
-    // checkboxes for fda contracts layer
+    // checkboxes for dob permit layer & stories
     var checkboxDOB = $('input.dob:checkbox'),
           $a1 = $('#a1'),
           $a2a3 = $('#a2a3'),
@@ -328,76 +307,54 @@ app.map = (function(w,d, $, _){
           $sg = $('#sites-of-gentrification'),
           $ps = $('#personal-stories');
 
-    var checkboxWRN = $('input.wrn:checkbox'),
-          $wrnltr = $('#warningLetters'),
-          $cvlpen = $('#civilPenalties');
-
     // toggle A1 major alterations layer
-    // $a1.change(function(){
-    //   if ($a1.is(':checked')){
-    //     el.dobPermitsA1.show();      
-    //   } else {
-    //     el.dobPermitsA1.hide();
-    //   };
-    // });
-
-    // toggle A2, A3 minor alterations layer
-    // $a2a3.change(function(){
-    //   if ($a2a3.is(':checked')){
-    //     el.dobPermitsA2A3.show();        
-    //   } else {
-    //     el.dobPermitsA2A3.hide();
-    //   };
-    // });    
-
-    // HOLLY THIS IS FOR FDA TEST toggle layer
-    // $nb.change(function(){
-    //   if ($nb.is(':checked')){
-    //     el.dobPermitsNB.show();        
-    //   } else {
-    //     el.dobPermitsNB.hide();
-    //   };
-    // });
-
-  // HOLLY THIS IS FOR WRN Test - toggle
-    $wrnltr.change(function(){
-      if ($wrnltr.is(':checked')){
-        el.fdaWarnings.show();        
+    $a1.change(function(){
+      if ($a1.is(':checked')){
+        el.dobPermitsA1.show();      
       } else {
-        el.fdaWarnings.hide();
+        el.dobPermitsA1.hide();
       };
     });
 
-    // HOLLY THIS IS FOR cvlpen Test - toggle
-    $cvlpen.change(function(){
-      if ($cvlpen.is(':checked')){
-        el.fdaCivil.show();        
+    // toggle A2, A3 minor alterations layer
+    $a2a3.change(function(){
+      if ($a2a3.is(':checked')){
+        el.dobPermitsA2A3.show();        
       } else {
-        el.fdaCivil.hide();
+        el.dobPermitsA2A3.hide();
+      };
+    });    
+
+    // HOLLY THIS IS FOR FDA TEST toggle NB new buildings layer
+    $nb.change(function(){
+      if ($nb.is(':checked')){
+        el.dobPermitsNB.show();        
+      } else {
+        el.dobPermitsNB.hide();
       };
     });
 
     // toggle sites of gentrification
-    // $sg.change(function(){
-    //   if ($sg.is(':checked')) {
-    //     for (i=0; i<el.sitesGent.length; i++) {
-    //       el.featureGroup.addLayer(el.sitesGent[i]);  
-    //     }
-    //     el.featureGroup.addLayer(el.rheingoldPoly);
-    //     el.map.fitBounds(el.featureGroup, {padding: [200, 200]});
+    $sg.change(function(){
+      if ($sg.is(':checked')) {
+        for (i=0; i<el.sitesGent.length; i++) {
+          el.featureGroup.addLayer(el.sitesGent[i]);  
+        }
+        el.featureGroup.addLayer(el.rheingoldPoly);
+        el.map.fitBounds(el.featureGroup, {padding: [200, 200]});
 
-    //     // open popups of markers on load
-    //     el.featureGroup.eachLayer(function(layer) {          
-    //       layer.openPopup();
-    //     });
+        // open popups of markers on load
+        el.featureGroup.eachLayer(function(layer) {          
+          layer.openPopup();
+        });
         
-    //   } else {
-    //     for (i=0; i<el.sitesGent.length; i++) {
-    //       el.featureGroup.removeLayer(el.sitesGent[i]);  
-    //     }
-    //     el.featureGroup.removeLayer(el.rheingoldPoly);
-    //   };
-    // }); 
+      } else {
+        for (i=0; i<el.sitesGent.length; i++) {
+          el.featureGroup.removeLayer(el.sitesGent[i]);  
+        }
+        el.featureGroup.removeLayer(el.rheingoldPoly);
+      };
+    }); 
 
   }
   
@@ -473,6 +430,7 @@ app.map = (function(w,d, $, _){
 
 //HOLLY - THIS IS FOR LEGEND CSS - ADJUST FOR CHOROPLETH
   // data passed to renderLegend();
+  // to do: generate this dynamically from cartocss
   el.legendData = {
     availFAR : {
       title : "Available FAR",
@@ -582,7 +540,7 @@ app.map = (function(w,d, $, _){
   // get it all going!
   var init = function() {
     initMap();
-    //initButtons();
+    initButtons();
     initCheckboxes();
     searchAddress();
     initZoomButtons();
