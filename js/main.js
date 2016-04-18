@@ -240,7 +240,7 @@ app.map = (function(w,d, $, _){
 
 
       // HOLLY hide the FDA Layer when map loads
-      //el.fdaWarnings.hide();
+      el.fdaWarnings.hide();
 
       //HOLLY CHANGE VARIABLE NAME - Hide FDA Contracts when load
       el.dobPermitsNB.hide();
@@ -291,26 +291,31 @@ app.map = (function(w,d, $, _){
   };
 
   // add FDA WARNINGS layer button event listeners
-  var initButtons = function() {
-    $('.button').click(function(e) {
-      // e.preventDefault(); 
-      $('.button').removeClass('selected');
-      $(this).addClass('selected');
-      el.fdaWarningsActions[$(this).attr('id')]();
-      el.fdaWarnings.show();
+  // var initButtons = function() {
+  //   $('.button').click(function(e) {
+  //     // e.preventDefault(); 
+  //     $('.button').removeClass('selected');
+  //     $(this).addClass('selected');
+  //     el.fdaWarningsActions[$(this).attr('id')]();
+  //     el.fdaWarnings.show();
 
-    }); 
-  }
+  //   }); 
+  // }
 
   // HOLLY - FOR EXTRA LAYERS toggle additional layers based on check box boolean value
   var initCheckboxes = function() {
-    // checkboxes for dob permit layer & stories
+    // checkboxes for fda contracts layer
     var checkboxDOB = $('input.dob:checkbox'),
           $a1 = $('#a1'),
           $a2a3 = $('#a2a3'),
           $nb = $('#nb'),
           $sg = $('#sites-of-gentrification'),
           $ps = $('#personal-stories');
+
+    var checkboxWRN = $('input.wrn:checkbox'),
+          $wrnltr = $('#warningLetters');
+
+
 
     // toggle A1 major alterations layer
     // $a1.change(function(){
@@ -330,12 +335,21 @@ app.map = (function(w,d, $, _){
     //   };
     // });    
 
-    // HOLLY THIS IS FOR FDA TEST toggle NB new buildings layer
+    // HOLLY THIS IS FOR FDA TEST toggle layer
     $nb.change(function(){
       if ($nb.is(':checked')){
         el.dobPermitsNB.show();        
       } else {
         el.dobPermitsNB.hide();
+      };
+    });
+
+  // HOLLY THIS IS FOR WRN Test - toggle
+    $wrnltr.change(function(){
+      if ($wrnltr.is(':checked')){
+        el.fdaWarnings.show();        
+      } else {
+        el.fdaWarnings.hide();
       };
     });
 
@@ -544,7 +558,7 @@ app.map = (function(w,d, $, _){
   // get it all going!
   var init = function() {
     initMap();
-    initButtons();
+    //initButtons();
     initCheckboxes();
     searchAddress();
     initZoomButtons();
