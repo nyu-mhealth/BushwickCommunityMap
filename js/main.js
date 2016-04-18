@@ -126,8 +126,6 @@ app.map = (function(w,d, $, _){
       e.layer.bringToBack();
     })  
 
-     // HOLLY - USE THIS FOR SELECTION DATA - load the loadTracts GeoJSON layer - unomment later
-    // loadTracts();
 
   //HOLLY - for createlayer from geojson calls - uncomment when working on queries
   // function loadTracts() {
@@ -156,19 +154,8 @@ app.map = (function(w,d, $, _){
         layer.getSubLayer(0).setSQL(el.sql.all);
         el.fdaWarnings = layer.getSubLayer(0); //HOLLY - change name later
 
-        //NOT WORKING
-        // store the warnings sublayer - all warnings and civil penalties
-        // layer.getSubLayer(1).setCartoCSS(el.styles.allContracts);
-        // layer.getSubLayer(1).setSQL(el.sql.allContracts);
-        // el.fdaContracts = layer.getSubLayer(1); //HOLLY - change name later
 
-        //HOLLY COMMENT - TEST MAKING CONTRACTS LAYER
-        //create and store the dob permits a1 sublayer
-        //NOT WORKING
-        // el.dobPermitsA1 = layer.createSubLayer();
-        // el.dobPermitsA1.setSQL(el.sql.allContracts);
-
-        //TRY THIS
+        //HOLLY - CREATE FDA LAYER ON THE FLY
           el.dobPermitsNB = layer.createSubLayer({
           sql : "SELECT * FROM fda_state_contracts",
           cartocss : "#allContracts{polygon-fill: #FFFFB2;" +
@@ -215,7 +202,7 @@ app.map = (function(w,d, $, _){
 
         //HOLLY - LAYERS OTHER THAN WARNINGS - EDIT AND TEST
         // hide and set interactivity on the DOB permit layers
-        var num_sublayers = layer.getSubLayerCount();
+        //var num_sublayers = layer.getSubLayerCount();
         // for (var i = 1; i < num_sublayers; i++) { 
         //   // turn on interactivity for mousing events
         //   layer.getSubLayer(i).setInteraction(true);
@@ -245,16 +232,18 @@ app.map = (function(w,d, $, _){
         //     $(document).unbind('mousemove', event, false);
         //   });
 
-          // hide the FDA Layer when map loads
+          // hide the Layer when map loads
           //layer.getSubLayer(i).hide();
-          el.dobPermitsNB.hide();
-
+         
         // } // end sublayer for loop
 
-      
-      //HOLLY KEEP THIS
+
+      // HOLLY hide the FDA Layer when map loads
+      el.dobPermitsNB.hide();
+
       // add the cdb layer to the map
       el.map.addLayer(layer, false);
+
       // make sure the base layer stays below the cdb layer      
       el.mapboxTiles.bringToBack();
 
@@ -273,7 +262,7 @@ app.map = (function(w,d, $, _){
     layer.setSQL(sql);
   }
 
-  // corresponding cartoCSS & SQL changes to tax lot layer buttons
+  // corresponding cartoCSS & SQL changes to FDA WARNINGS layer buttons
   // legends are displayed or hidden as needed
   el.fdaWarningsActions = {                          //HOLLY CHANGE NAME LATER
     all : function() {
@@ -294,15 +283,9 @@ app.map = (function(w,d, $, _){
       renderLegend(el.legendData.civilPenalties);
       return true;
     },
-    //  allContracts : function() {
-    //   changeCartoCSS(el.fdaContracts, el.styles.allContracts);
-    //   changeSQL(el.fdaContracts, el.sql.allContracts);
-    //   renderLegend(el.legendData.allContracts);
-    //   return true;
-    // }
   };
 
-  // add tax lot layer button event listeners
+  // add FDA WARNINGS layer button event listeners
   var initButtons = function() {
     $('.button').click(function(e) {
       // e.preventDefault(); 
@@ -314,7 +297,7 @@ app.map = (function(w,d, $, _){
     }); 
   }
 
-  // toggle additional layers based on check box boolean value
+  // HOLLY - FOR EXTRA LAYERS toggle additional layers based on check box boolean value
   var initCheckboxes = function() {
     // checkboxes for dob permit layer & stories
     var checkboxDOB = $('input.dob:checkbox'),
@@ -342,7 +325,7 @@ app.map = (function(w,d, $, _){
       };
     });    
 
-    // toggle NB new buildings layer
+    // HOLLY THIS IS FOR FDA TEST toggle NB new buildings layer
     $nb.change(function(){
       if ($nb.is(':checked')){
         el.dobPermitsNB.show();        
@@ -445,6 +428,7 @@ app.map = (function(w,d, $, _){
     });
   }
 
+//HOLLY - THIS IS FOR LEGEND CSS - ADJUST FOR CHOROPLETHS
   // data passed to renderLegend();
   // to do: generate this dynamically from cartocss
   el.legendData = {
