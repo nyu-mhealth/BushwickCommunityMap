@@ -200,7 +200,7 @@ app.map = (function(w,d, $, _){
               });
           };                                
 
-        //HOLLY - LAYERS OTHER THAN WARNINGS - EDIT AND TEST
+        //HOLLY - LAYERS OTHER THAN WARNINGS INFOWINDOWS - EDIT AND TEST
         // hide and set interactivity on the DOB permit layers
         //var num_sublayers = layer.getSubLayerCount();
         // for (var i = 1; i < num_sublayers; i++) { 
@@ -428,7 +428,7 @@ app.map = (function(w,d, $, _){
     });
   }
 
-//HOLLY - THIS IS FOR LEGEND CSS - ADJUST FOR CHOROPLETHS
+//HOLLY - THIS IS FOR LEGEND CSS - ADJUST FOR CHOROPLETH
   // data passed to renderLegend();
   // to do: generate this dynamically from cartocss
   el.legendData = {
