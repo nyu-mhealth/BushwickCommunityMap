@@ -301,40 +301,25 @@ app.map = (function(w,d, $, _){
   var initCheckboxes = function() {
     // checkboxes for dob permit layer & stories
     var checkboxDOB = $('input.dob:checkbox'),
-          $a1 = $('#a1'),
-          $a2a3 = $('#a2a3'),
+          //$a1 = $('#a1'),
+          //$a2a3 = $('#a2a3'),
           $nb = $('#nb'),
-          $sg = $('#sites-of-gentrification'),
-          $ps = $('#personal-stories');
-
-    // toggle A1 major alterations layer
-    $a1.change(function(){
-      if ($a1.is(':checked')){
-        el.dobPermitsA1.show();      
-      } else {
-        el.dobPermitsA1.hide();
-      };
-    });
-
-    // toggle A2, A3 minor alterations layer
-    $a2a3.change(function(){
-      if ($a2a3.is(':checked')){
-        el.dobPermitsA2A3.show();        
-      } else {
-        el.dobPermitsA2A3.hide();
-      };
-    });    
+          $sg = $('#sites-of-gentrification');
+          //$ps = $('#personal-stories');
+  
 
     // HOLLY THIS IS FOR FDA TEST toggle NB new buildings layer
     $nb.change(function(){
       if ($nb.is(':checked')){
-        el.dobPermitsNB.show();        
+        el.dobPermitsNB.show();
+        //NOT WORKING
+        //el.dobPermitsNB.bringToBack;       
       } else {
         el.dobPermitsNB.hide();
       };
     });
 
-    // toggle sites of gentrification
+        // toggle sites of gentrification
     $sg.change(function(){
       if ($sg.is(':checked')) {
         for (i=0; i<el.sitesGent.length; i++) {
@@ -355,6 +340,47 @@ app.map = (function(w,d, $, _){
         el.featureGroup.removeLayer(el.rheingoldPoly);
       };
     }); 
+
+
+    // HOLLY COMMENTED OUT toggle A1 major alterations layer
+    // $a1.change(function(){
+    //   if ($a1.is(':checked')){
+    //     el.dobPermitsA1.show();      
+    //   } else {
+    //     el.dobPermitsA1.hide();
+    //   };
+    // });
+
+    // HOLLY COMMENTED OUT toggle A2, A3 minor alterations layer
+    // $a2a3.change(function(){
+    //   if ($a2a3.is(':checked')){
+    //     el.dobPermitsA2A3.show();        
+    //   } else {
+    //     el.dobPermitsA2A3.hide();
+    //   };
+    // });  
+
+    // HOLLY COMMENT OUT - toggle sites of gentrification
+    // $sg.change(function(){
+    //   if ($sg.is(':checked')) {
+    //     for (i=0; i<el.sitesGent.length; i++) {
+    //       el.featureGroup.addLayer(el.sitesGent[i]);  
+    //     }
+    //     el.featureGroup.addLayer(el.rheingoldPoly);
+    //     el.map.fitBounds(el.featureGroup, {padding: [200, 200]});
+
+    //     // open popups of markers on load
+    //     el.featureGroup.eachLayer(function(layer) {          
+    //       layer.openPopup();
+    //     });
+        
+    //   } else {
+    //     for (i=0; i<el.sitesGent.length; i++) {
+    //       el.featureGroup.removeLayer(el.sitesGent[i]);  
+    //     }
+    //     el.featureGroup.removeLayer(el.rheingoldPoly);
+    //   };
+    // }); 
 
   }
   
