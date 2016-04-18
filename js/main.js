@@ -15,6 +15,7 @@ app.map = (function(w,d, $, _){
     mapboxTiles : null,
     satellite : null,
     fdaWarnings : null,
+    fdaCivil : null,
     fdaContracts : null,
     baseLayers : null,
     dobPermitsA1 : null,
@@ -166,12 +167,22 @@ app.map = (function(w,d, $, _){
                                         '#fda_state_contracts [ most_recent_award_amount <= 962947.8] {polygon-fill: #FFFFB2;}',
         });
 
+
+
         // store the warnings sublayer - all warnings and civil penalties
         // layer.getSubLayer(0).setCartoCSS(el.styles.all);
         // layer.getSubLayer(0).setSQL(el.sql.all);
         layer.getSubLayer(0).setCartoCSS(el.styles.warningLetters);
         layer.getSubLayer(0).setSQL(el.sql.warningLetters);
-        el.fdaWarnings = layer.getSubLayer(0); //HOLLY - change name later
+        el.fdaWarnings = layer.getSubLayer(0); 
+
+
+        layer.getSubLayer(1).setCartoCSS(el.styles.civilPenalties);
+        layer.getSubLayer(1).setSQL(el.sql.civilPenalties);
+        el.fdaCivil = layer.getSubLayer(1); 
+
+        var num_sublayers = layer.getSubLayerCount();
+        alert("Number of layers is " + num_sublayers);
 
         //HOLLY COMMENT - USE THIS FOR CHECKBOX LAYERS OTHER THAN WARNINGS
         // create and store the dob permits a1 sublayer
@@ -238,15 +249,20 @@ app.map = (function(w,d, $, _){
          
         // } // end sublayer for loop
 
+      //HOLLY CHANGE VARIABLE NAME - Hide FDA Contracts when load
+      //el.dobPermitsNB.hide();
 
       // HOLLY hide the FDA Layer when map loads
       el.fdaWarnings.hide();
 
-      //HOLLY CHANGE VARIABLE NAME - Hide FDA Contracts when load
-      el.dobPermitsNB.hide();
+      // HOLLY hide the FDA Layer when map loads
+      el.fdaCivil.hide();
+
+
 
       // add the cdb layer to the map
       el.map.addLayer(layer, false);
+      // alert("Here is the layer being added to map " + layer.);
 
 
       // make sure the base layer stays below the cdb layer      
@@ -313,9 +329,8 @@ app.map = (function(w,d, $, _){
           $ps = $('#personal-stories');
 
     var checkboxWRN = $('input.wrn:checkbox'),
-          $wrnltr = $('#warningLetters');
-
-
+          $wrnltr = $('#warningLetters'),
+          $cvlpen = $('#civilPenalties');
 
     // toggle A1 major alterations layer
     // $a1.change(function(){
@@ -336,13 +351,13 @@ app.map = (function(w,d, $, _){
     // });    
 
     // HOLLY THIS IS FOR FDA TEST toggle layer
-    $nb.change(function(){
-      if ($nb.is(':checked')){
-        el.dobPermitsNB.show();        
-      } else {
-        el.dobPermitsNB.hide();
-      };
-    });
+    // $nb.change(function(){
+    //   if ($nb.is(':checked')){
+    //     el.dobPermitsNB.show();        
+    //   } else {
+    //     el.dobPermitsNB.hide();
+    //   };
+    // });
 
   // HOLLY THIS IS FOR WRN Test - toggle
     $wrnltr.change(function(){
@@ -350,6 +365,15 @@ app.map = (function(w,d, $, _){
         el.fdaWarnings.show();        
       } else {
         el.fdaWarnings.hide();
+      };
+    });
+
+    // HOLLY THIS IS FOR cvlpen Test - toggle
+    $cvlpen.change(function(){
+      if ($cvlpen.is(':checked')){
+        el.fdaCivil.show();        
+      } else {
+        el.fdaCivil.hide();
       };
     });
 
