@@ -15,6 +15,7 @@ app.map = (function(w,d, $, _){
     mapboxTiles : null,
     satellite : null,
     tractsLayer: null,
+    synarLayer: null,
     fdaWarnings : null,
     fdaContracts : null,
     baseLayers : null,
@@ -127,24 +128,52 @@ app.map = (function(w,d, $, _){
       e.layer.bringToBack();
     })  
 
-    // add geojson for states
-    loadTracts();
+    // add geojson for synar
+    loadSynar();
+
+    // add geojson for census tracts
+    //loadTracts();
 
   // add the warnings layer from cartodb
     getCDBData();
   }
 
+ function getColor(p) {
+    return p > 11 ? '#2C7FB8' :
+           p > 7.55  ? '#7FCDBB' :
+            '#EDF8B1';
+}
+function style(feature) {
+    return {
+        fillColor: getColor(feature.properties.percent),
+        weight: 2,
+        opacity: 1,
+        color: 'white',
+        dashArray: '3',
+        fillOpacity: 0.7
+    };
+}
+
+  //HOLLY - for createlayer from geojson calls - uncomment when working on queries
+  function loadSynar() {
+      // create the layer and add to the map, then will be filled with data
+      el.synarLayer = L.geoJson().addTo(el.map);
+      el.sqlTrct = new cartodb.SQL({ user: 'legacy', format: 'geojson' });
+      el.sqlTrct.execute("select * from synar_states").done(function(geojson) {
+      el.synarLayer.addData(geojson);
+        });
+  } 
 
 
   //HOLLY - for createlayer from geojson calls - uncomment when working on queries
-  function loadTracts() {
-      // create the layer and add to the map, then will be filled with data
-      el.tractsLayer = L.geoJson().addTo(el.map);
-      el.sqlTrct = new cartodb.SQL({ user: 'legacy', format: 'geojson' });
-      el.sqlTrct.execute("select * from dc_tracts_2014").done(function(geojson) {
-          el.tractsLayer.addData(geojson);
-        });
-  } 
+  // function loadTracts() {
+  //     // create the layer and add to the map, then will be filled with data
+  //     el.tractsLayer = L.geoJson().addTo(el.map);
+  //     el.sqlTrct = new cartodb.SQL({ user: 'legacy', format: 'geojson' });
+  //     el.sqlTrct.execute("select * from dc_tracts_2014").done(function(geojson) {
+  //         el.tractsLayer.addData(geojson);
+  //       });
+  // } 
 
   // function to load map all warnings layer from CartoDB
   var getCDBData = function() {  
