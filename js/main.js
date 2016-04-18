@@ -14,6 +14,7 @@ app.map = (function(w,d, $, _){
     sql : null,
     mapboxTiles : null,
     satellite : null,
+    tractsLayer: null,
     fdaWarnings : null,
     fdaContracts : null,
     baseLayers : null,
@@ -126,20 +127,24 @@ app.map = (function(w,d, $, _){
       e.layer.bringToBack();
     })  
 
-
-  //HOLLY - for createlayer from geojson calls - uncomment when working on queries
-  // function loadTracts() {
-  //     // create the layer and add to the map, then will be filled with data
-  //     el.tractsLayer = L.geoJson().addTo(el.map);
-  //     el.sqlTrct = new cartodb.SQL({ user: 'legacy', format: 'geojson' });
-  //     el.sqlTrct.execute("select * from dc_tracts_2014").done(function(geojson) {
-  //         el.tractsLayer.addData(geojson);
-  //       });
-  // } 
+    // add geojson for states
+    loadTracts();
 
   // add the warnings layer from cartodb
     getCDBData();
   }
+
+
+
+  //HOLLY - for createlayer from geojson calls - uncomment when working on queries
+  function loadTracts() {
+      // create the layer and add to the map, then will be filled with data
+      el.tractsLayer = L.geoJson().addTo(el.map);
+      el.sqlTrct = new cartodb.SQL({ user: 'legacy', format: 'geojson' });
+      el.sqlTrct.execute("select * from dc_tracts_2014").done(function(geojson) {
+          el.tractsLayer.addData(geojson);
+        });
+  } 
 
   // function to load map all warnings layer from CartoDB
   var getCDBData = function() {  
