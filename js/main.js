@@ -87,8 +87,6 @@ app.map = (function(w,d, $, _){
     });
 
     
-    //HOLLY GOOD SECTION
-    
     // instantiate the Leaflet map object
     el.map = new L.map('map', params);
     
@@ -149,10 +147,7 @@ app.map = (function(w,d, $, _){
         https: true 
       }, 
       function(layer) {
-        // store the warnings sublayer - all warnings and civil penalties
-        layer.getSubLayer(0).setCartoCSS(el.styles.all);
-        layer.getSubLayer(0).setSQL(el.sql.all);
-        el.fdaWarnings = layer.getSubLayer(0); //HOLLY - change name later
+
 
 
         //HOLLY - CREATE FDA LAYER ON THE FLY
@@ -171,6 +166,10 @@ app.map = (function(w,d, $, _){
                                         '#fda_state_contracts [ most_recent_award_amount <= 962947.8] {polygon-fill: #FFFFB2;}',
         });
 
+        // store the warnings sublayer - all warnings and civil penalties
+        layer.getSubLayer(0).setCartoCSS(el.styles.all);
+        layer.getSubLayer(0).setSQL(el.sql.all);
+        el.fdaWarnings = layer.getSubLayer(0); //HOLLY - change name later
 
         //HOLLY COMMENT - USE THIS FOR CHECKBOX LAYERS OTHER THAN WARNINGS
         // create and store the dob permits a1 sublayer
@@ -239,10 +238,14 @@ app.map = (function(w,d, $, _){
 
 
       // HOLLY hide the FDA Layer when map loads
+      //el.fdaWarnings.hide();
+
+      //HOLLY CHANGE VARIABLE NAME - Hide FDA Contracts when load
       el.dobPermitsNB.hide();
 
       // add the cdb layer to the map
       el.map.addLayer(layer, false);
+
 
       // make sure the base layer stays below the cdb layer      
       el.mapboxTiles.bringToBack();
