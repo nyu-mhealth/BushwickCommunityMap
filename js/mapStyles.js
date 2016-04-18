@@ -5,19 +5,19 @@ app.mapStyles = (function(){
   return {
     
     // Category style, warning letters orange / civil penalties red
-    all : "#allwarnings_dc {" +
-                             "marker-fill-opacity: 0.9;" +
-                             "marker-line-color: #FFF;" +
-                             "marker-line-width: 1;" +
-                             "marker-line-opacity: 1;" +
-                             "marker-placement: point;" +
-                             "marker-type: ellipse;" +
-                             "marker-width: 10;" +
-                             "marker-allow-overlap: true;" +
-                          "}" +
+    // all : "#allwarnings_dc {" +
+    //                          "marker-fill-opacity: 0.9;" +
+    //                          "marker-line-color: #FFF;" +
+    //                          "marker-line-width: 1;" +
+    //                          "marker-line-opacity: 1;" +
+    //                          "marker-placement: point;" +
+    //                          "marker-type: ellipse;" +
+    //                          "marker-width: 10;" +
+    //                          "marker-allow-overlap: true;" +
+    //                       "}" +
 
-          '#allwarnings_dc[decisiontype="Civil Money Penalty"] {marker-fill: #B40903;}' +
-          '#allwarnings_dc[decisiontype="Warning Letter"] {marker-fill: #000000;}',
+    //       '#allwarnings_dc[decisiontype="Civil Money Penalty"] {marker-fill: #B40903;}' +
+    //       '#allwarnings_dc[decisiontype="Warning Letter"] {marker-fill: #000000;}',
 
     // default style, all lots are the same color
     // all : '#allwarnings_dc {' +

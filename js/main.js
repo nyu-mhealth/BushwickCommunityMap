@@ -43,7 +43,7 @@ app.map = (function(w,d, $, _){
   // queries for warning violatiions
   // sent to cartodb when layer buttons clicked
   el.sql = {
-    all : "SELECT * FROM allwarnings_dc",
+    //all : "SELECT * FROM allwarnings_dc",
     warningLetters : "SELECT * FROM allwarnings_dc WHERE decisiontype = 'Warning Letter'",
     civilPenalties : "SELECT * FROM allwarnings_dc WHERE decisiontype = 'Civil Money Penalty'",
     //NOT WORKING
@@ -167,8 +167,10 @@ app.map = (function(w,d, $, _){
         });
 
         // store the warnings sublayer - all warnings and civil penalties
-        layer.getSubLayer(0).setCartoCSS(el.styles.all);
-        layer.getSubLayer(0).setSQL(el.sql.all);
+        // layer.getSubLayer(0).setCartoCSS(el.styles.all);
+        // layer.getSubLayer(0).setSQL(el.sql.all);
+        layer.getSubLayer(0).setCartoCSS(el.styles.warningLetters);
+        layer.getSubLayer(0).setSQL(el.sql.warningLetters);
         el.fdaWarnings = layer.getSubLayer(0); //HOLLY - change name later
 
         //HOLLY COMMENT - USE THIS FOR CHECKBOX LAYERS OTHER THAN WARNINGS
@@ -268,12 +270,12 @@ app.map = (function(w,d, $, _){
   // corresponding cartoCSS & SQL changes to FDA WARNINGS layer buttons
   // legends are displayed or hidden as needed
   el.fdaWarningsActions = {                          //HOLLY CHANGE NAME LATER
-    all : function() {
-      changeCartoCSS(el.fdaWarnings, el.styles.all);
-      changeSQL(el.fdaWarnings, el.sql.all);
-      renderLegend(null);
-      return true;
-    },
+    // all : function() {
+    //   changeCartoCSS(el.fdaWarnings, el.styles.all);
+    //   changeSQL(el.fdaWarnings, el.sql.all);
+    //   renderLegend(null);
+    //   return true;
+    // },
      warningLetters : function() {
       changeCartoCSS(el.fdaWarnings, el.styles.warningLetters);
       changeSQL(el.fdaWarnings, el.sql.warningLetters);
