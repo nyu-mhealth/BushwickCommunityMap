@@ -99,8 +99,8 @@ app.map = (function(w,d, $, _){
     el.mapboxTiles = L.mapbox.tileLayer('chenrick.map-3gzk4pem');
     el.map.addLayer(el.mapboxTiles); 
 
-    // add mapbox and osm attribution
-    var attr = "<a href='https://www.mapbox.com/about/maps/' target='_blank'>&copy; Mapbox &copy; OpenStreetMap</a>"
+    // add mapbox attribution
+    var attr = "<a href='https://www.mapbox.com/about/maps/' target='_blank'>&copy; Mapbox &copy</a>"
     el.map.attributionControl.addAttribution(attr);
 
     //HOLLY CHANGE TO USE CENSUS TRACKS
@@ -308,22 +308,22 @@ app.map = (function(w,d, $, _){
           $ps = $('#personal-stories');
 
     // toggle A1 major alterations layer
-    $a1.change(function(){
-      if ($a1.is(':checked')){
-        el.dobPermitsA1.show();      
-      } else {
-        el.dobPermitsA1.hide();
-      };
-    });
+    // $a1.change(function(){
+    //   if ($a1.is(':checked')){
+    //     el.dobPermitsA1.show();      
+    //   } else {
+    //     el.dobPermitsA1.hide();
+    //   };
+    // });
 
     // toggle A2, A3 minor alterations layer
-    $a2a3.change(function(){
-      if ($a2a3.is(':checked')){
-        el.dobPermitsA2A3.show();        
-      } else {
-        el.dobPermitsA2A3.hide();
-      };
-    });    
+    // $a2a3.change(function(){
+    //   if ($a2a3.is(':checked')){
+    //     el.dobPermitsA2A3.show();        
+    //   } else {
+    //     el.dobPermitsA2A3.hide();
+    //   };
+    // });    
 
     // HOLLY THIS IS FOR FDA TEST toggle NB new buildings layer
     $nb.change(function(){
@@ -335,26 +335,26 @@ app.map = (function(w,d, $, _){
     });
 
     // toggle sites of gentrification
-    $sg.change(function(){
-      if ($sg.is(':checked')) {
-        for (i=0; i<el.sitesGent.length; i++) {
-          el.featureGroup.addLayer(el.sitesGent[i]);  
-        }
-        el.featureGroup.addLayer(el.rheingoldPoly);
-        el.map.fitBounds(el.featureGroup, {padding: [200, 200]});
+    // $sg.change(function(){
+    //   if ($sg.is(':checked')) {
+    //     for (i=0; i<el.sitesGent.length; i++) {
+    //       el.featureGroup.addLayer(el.sitesGent[i]);  
+    //     }
+    //     el.featureGroup.addLayer(el.rheingoldPoly);
+    //     el.map.fitBounds(el.featureGroup, {padding: [200, 200]});
 
-        // open popups of markers on load
-        el.featureGroup.eachLayer(function(layer) {          
-          layer.openPopup();
-        });
+    //     // open popups of markers on load
+    //     el.featureGroup.eachLayer(function(layer) {          
+    //       layer.openPopup();
+    //     });
         
-      } else {
-        for (i=0; i<el.sitesGent.length; i++) {
-          el.featureGroup.removeLayer(el.sitesGent[i]);  
-        }
-        el.featureGroup.removeLayer(el.rheingoldPoly);
-      };
-    }); 
+    //   } else {
+    //     for (i=0; i<el.sitesGent.length; i++) {
+    //       el.featureGroup.removeLayer(el.sitesGent[i]);  
+    //     }
+    //     el.featureGroup.removeLayer(el.rheingoldPoly);
+    //   };
+    // }); 
 
   }
   
@@ -430,7 +430,6 @@ app.map = (function(w,d, $, _){
 
 //HOLLY - THIS IS FOR LEGEND CSS - ADJUST FOR CHOROPLETH
   // data passed to renderLegend();
-  // to do: generate this dynamically from cartocss
   el.legendData = {
     availFAR : {
       title : "Available FAR",
