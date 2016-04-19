@@ -7,33 +7,22 @@ app.map = (function(w,d, $, _){
   //  define all local variables for map parts and layers 
   //  store in an object called 'el' that can be accessed elsewhere
   var el = {
-    map : null,
-    cdbURL : null,
-    styles: null,
-    styleCur : null,
-    sql : null,
-    mapboxTiles : null,
-    satellite : null,
-    tractsLayer: null,
-    synarLayer: null,
-    fdaWarnings : null,
     baseLayers : null,
-    dobPermitsA1 : null,
-    dobPermitsA2A3 : null,
-    fdaContracts : null,
-    rheingoldPoly : null,
-    bushwick : null,
-    rheingold : null,
-    colony : null,
-    linden : null,
-    groveSt : null,
+    cdbURL : null,
+    fdaWarnings : null,
+    fdaWarningsActions : null,
+    fdaContracts : null,   
     featureGroup : null,
-    template : null,
     geocoder : null,
     geocoderMarker : null, 
     legend : null,
-    fdaWarningsActions : null,
-    story : null
+    map : null,
+    mapboxTiles : null,
+    satellite : null,                
+    sql : null,   
+    styles: null,
+    synarPoly : null,
+    template : null
   };
 
   // reference cartocss styles from mapStyles.js
@@ -100,8 +89,8 @@ app.map = (function(w,d, $, _){
     var attr = "<a href='https://www.mapbox.com/about/maps/' target='_blank'>&copy; Mapbox &copy; OpenStreetMap</a>"
     el.map.attributionControl.addAttribution(attr);
 
-    //HOLLY CHANGE TO USE CENSUS TRACKS
-    // feature group to store rheingold geoJSON
+    //HOLLY MAYBE USE THIS LOGIC LATER
+    // feature group to store geoJSON
     el.featureGroup = L.featureGroup().addTo(el.map);    
     
     // add Bing satelitte imagery layer
@@ -151,7 +140,7 @@ function style(feature) {
   // HOLLY - SYNAR GEOJSON load the geoJSON boundary for the Rheingold development
   function loadRheingold() {
     $.getJSON('./data/synar_states.geojson', function(json, textStatus) {
-        el.rheingoldPoly = L.geoJson(json, {
+        el.synarPoly = L.geoJson(json, {
           style: style,
           onEachFeature: onEachFeature
         });
@@ -195,7 +184,7 @@ function highlightFeature(e) {
     }
 
     function resetHighlight(e) {
-       el.rheingoldPoly.resetStyle(e.target);
+       el.synarPoly.resetStyle(e.target);
       info.update();
     }
 
@@ -333,21 +322,11 @@ function highlightFeature(e) {
     // toggle sites of gentrification
     $sg.change(function(){
       if ($sg.is(':checked')) {
-        el.featureGroup.addLayer(el.rheingoldPoly);        
+        el.featureGroup.addLayer(el.synarPoly);        
       } else {    
-        el.featureGroup.removeLayer(el.rheingoldPoly);
+        el.featureGroup.removeLayer(el.synarPoly);
       };
     }); 
-
-
-    // HOLLY COMMENTED OUT toggle A1 major alterations layer
-    // $a1.change(function(){
-    //   if ($a1.is(':checked')){
-    //     el.dobPermitsA1.show();      
-    //   } else {
-    //     el.dobPermitsA1.hide();
-    //   };
-    // });
 
   }
   
