@@ -1,10 +1,14 @@
 /*** Global object that contains the app ***/
 var app = app || {};
 
+
+//BEGIN CODE
 // keep map stuff in a part of the app object as to not pollute the global name space
 app.map = (function(w,d, $, _){
 
-  //  define all local variables for map parts and layers 
+  
+//SET GLOBAL VARIABLES*******************************************************************************
+  //  define all  variables for map parts and layers 
   //  store in an object called 'el' that can be accessed elsewhere
   var el = {
     baseLayers : null,
@@ -30,10 +34,8 @@ app.map = (function(w,d, $, _){
   // url to cartodb FDA Violations map viz json
   el.cdbURL = "https://legacy.cartodb.com/api/v2/viz/3fe5ca92-0315-11e6-801b-0e31c9be1b51/viz.json";
 
-  // queries for warning violatiions
-  // sent to cartodb when layer buttons clicked
+  // queries for warning violatiions - sent to cartodb when layer buttons clicked
   el.sql = {
-    //all : "SELECT * FROM allwarnings_dc",
     warningLetters : "SELECT * FROM allwarnings_dc WHERE decisiontype = 'Warning Letter'",
     civilPenalties : "SELECT * FROM allwarnings_dc WHERE decisiontype = 'Civil Money Penalty'",
   };
@@ -43,11 +45,14 @@ app.map = (function(w,d, $, _){
   // _.templateSettings.variable = "legend";
   // el.template = _.template($("script.template").html());
 
+  // el.legend = $('#ui-legend');
+
   // use google maps api geocoder
   el.geocoder = new google.maps.Geocoder();
 
-  // el.legend = $('#ui-legend');
-                                                                           
+//END SET GLOBAL VARIABLES*******************************************************************************
+
+//BEGIN INIT ********************************************************************************************                                                                       
   // set up the map and map layers!
   var initMap = function() {
     // map paramaters to pass to Leaflet
@@ -73,8 +78,7 @@ app.map = (function(w,d, $, _){
             });
         }
     });
-
-    
+  
     // instantiate the Leaflet map object
     el.map = new L.map('map', params);
     
@@ -112,33 +116,22 @@ app.map = (function(w,d, $, _){
       e.layer.bringToBack();
     })  
 
+    //CALL THE FUNCTIONS TO CREATE MAP LAYERS
     // add geojson for synar
-    loadRheingold();
+    loadSynar();
 
-  // add the warnings layer from cartodb
+    // add the warnings layer from cartodb
     getCDBData();
-  }
 
- function getColor(p) {
-    return p > 11 ? '#2C7FB8' :
-           p > 7.55  ? '#7FCDBB' :
-            '#EDF8B1';
-}
-function style(feature) {
-    return {
-        fillColor: getColor(feature.properties.percent),
-        weight: 2,
-        opacity: 1,
-        color: 'white',
-        dashArray: '3',
-        fillOpacity: 0.7
-    };
-}
+  }   
+
+//END INIT ******************************************************************************************** 
 
 
-
-  // HOLLY - SYNAR GEOJSON load the geoJSON boundary for the Rheingold development
-  function loadRheingold() {
+//BEGIN CREATE GEOJSON LAYERS *************************************************************************
+//Beginning creating choropleth with geojson code**************************************
+  // SYNAR GEOJSON load the geoJSON boundary Synar State Rates
+  function loadSynar() {
     $.getJSON('./data/synar_states.geojson', function(json, textStatus) {
         el.synarPoly = L.geoJson(json, {
           style: style,
@@ -147,6 +140,7 @@ function style(feature) {
     });
   } 
 
+  //set style and color for geojson choropleth
   function style(feature) {
       return {
         weight: 2,
@@ -158,28 +152,33 @@ function style(feature) {
       };
     }
 
-    // get color depending on population density value
+    // get color depending on percent field
     function getColor(d) {
       return d > 11 ? '#800026' :
              d > 7.55  ? '#BD0026' :
                         '#FFEDA0';
     }
+   
+    //set mouse over and click events on polygons 
+    function onEachFeature(feature, layer) {
+      layer.on({
+        mouseover: highlightFeature,
+        mouseout: resetHighlight,
+        click: zoomToFeature
+      });
+    }      
 
-    
-function highlightFeature(e) {
+    function highlightFeature(e) {
       var layer = e.target;
-
       layer.setStyle({
         weight: 5,
         color: '#666',
         dashArray: '',
         fillOpacity: 0.7
       });
-
       if (!L.Browser.ie && !L.Browser.opera) {
         layer.bringToFront();
       }
-
       info.update(layer.feature.properties);
     }
 
@@ -192,15 +191,7 @@ function highlightFeature(e) {
       map.fitBounds(e.target.getBounds());
     }
 
-    function onEachFeature(feature, layer) {
-      layer.on({
-        mouseover: highlightFeature,
-        mouseout: resetHighlight,
-        click: zoomToFeature
-      });
-    }
-  
-
+//End creating choropleth with geojson code**************************************
 
   // function to load map all warnings layer from CartoDB
   var getCDBData = function() {  
