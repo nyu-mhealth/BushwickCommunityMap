@@ -127,9 +127,6 @@ app.map = (function(w,d, $, _){
     // add geojson for synar
     loadRheingold();
 
-    // add geojson for census tracts
-    //loadTracts();
-
   // add the warnings layer from cartodb
     getCDBData();
   }
@@ -150,11 +147,14 @@ function style(feature) {
     };
 }
 
+
+
   // HOLLY - SYNAR GEOJSON load the geoJSON boundary for the Rheingold development
   function loadRheingold() {
     $.getJSON('./data/synar_states.geojson', function(json, textStatus) {
         el.rheingoldPoly = L.geoJson(json, {
-          style: style
+          style: style,
+          onEachFeature: onEachFeature
         });
     });
   } 
@@ -178,6 +178,41 @@ function style(feature) {
     }
 
     
+function highlightFeature(e) {
+      var layer = e.target;
+
+      layer.setStyle({
+        weight: 5,
+        color: '#666',
+        dashArray: '',
+        fillOpacity: 0.7
+      });
+
+      if (!L.Browser.ie && !L.Browser.opera) {
+        layer.bringToFront();
+      }
+
+      info.update(layer.feature.properties);
+    }
+
+    function resetHighlight(e) {
+       el.rheingoldPoly.resetStyle(e.target);
+      info.update();
+    }
+
+    function zoomToFeature(e) {
+      map.fitBounds(e.target.getBounds());
+    }
+
+    function onEachFeature(feature, layer) {
+      layer.on({
+        mouseover: highlightFeature,
+        mouseout: resetHighlight,
+        click: zoomToFeature
+      });
+    }
+  
+
 
   // function to load map all warnings layer from CartoDB
   var getCDBData = function() {  
@@ -283,19 +318,13 @@ function style(feature) {
   var initCheckboxes = function() {
     // checkboxes for dob permit layer & stories
     var checkboxDOB = $('input.dob:checkbox'),
-          //$a1 = $('#a1'),
-          //$a2a3 = $('#a2a3'),
           $nb = $('#nb'),
           $sg = $('#sites-of-gentrification');
-          //$ps = $('#personal-stories');
-  
 
     // HOLLY THIS IS FOR FDA TEST toggle NB new buildings layer
     $nb.change(function(){
       if ($nb.is(':checked')){
-        el.dobPermitsNB.show();
-        //NOT WORKING
-        //el.dobPermitsNB.bringToBack;       
+        el.dobPermitsNB.show();    
       } else {
         el.dobPermitsNB.hide();
       };
@@ -305,10 +334,8 @@ function style(feature) {
     // toggle sites of gentrification
     $sg.change(function(){
       if ($sg.is(':checked')) {
-        el.featureGroup.addLayer(el.rheingoldPoly);
-        
-      } else {
-       
+        el.featureGroup.addLayer(el.rheingoldPoly);        
+      } else {    
         el.featureGroup.removeLayer(el.rheingoldPoly);
       };
     }); 
@@ -509,8 +536,7 @@ function style(feature) {
     initButtons();
     initCheckboxes();
     searchAddress();
-    initZoomButtons();
-    // app.intro.init();    
+    initZoomButtons();  
   }
 
   // only return init() and the stuff in the el object
