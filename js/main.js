@@ -17,11 +17,10 @@ app.map = (function(w,d, $, _){
     tractsLayer: null,
     synarLayer: null,
     fdaWarnings : null,
-    fdaContracts : null,
     baseLayers : null,
     dobPermitsA1 : null,
     dobPermitsA2A3 : null,
-    dobPermitsNB : null,
+    fdaContracts : null,
     rheingoldPoly : null,
     bushwick : null,
     rheingold : null,
@@ -229,7 +228,7 @@ function highlightFeature(e) {
 
 
         //HOLLY - CREATE FDA LAYER ON THE FLY
-          el.dobPermitsNB = layer.createSubLayer({
+          el.fdaContracts = layer.createSubLayer({
           sql : "SELECT * FROM fda_state_contracts",
           cartocss : "#allContracts{polygon-fill: #FFFFB2;" +
                                         "polygon-opacity: 0.7;" +
@@ -256,7 +255,7 @@ function highlightFeature(e) {
 
 
       // HOLLY hide the FDA Layer when map loads
-      el.dobPermitsNB.hide();
+      el.fdaContracts.hide();
 
       // add the cdb layer to the map
       el.map.addLayer(layer, false);
@@ -324,9 +323,9 @@ function highlightFeature(e) {
     // HOLLY THIS IS FOR FDA TEST toggle NB new buildings layer
     $nb.change(function(){
       if ($nb.is(':checked')){
-        el.dobPermitsNB.show();    
+        el.fdaContracts.show();    
       } else {
-        el.dobPermitsNB.hide();
+        el.fdaContracts.hide();
       };
     });
 
