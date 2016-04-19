@@ -180,17 +180,25 @@ app.map = (function(w,d, $, _){
       if (!L.Browser.ie && !L.Browser.opera) {
         layer.bringToFront();
       }
-      info.update(layer.feature.properties);
+      //info.update(layer.feature.properties);
     }
 
     function resetHighlight(e) {
        el.synarPoly.resetStyle(e.target);
-      info.update();
+      // info.update();
     }
 
     function zoomToFeature(e) {
-      map.fitBounds(e.target.getBounds());
+      el.map.fitBounds(e.target.getBounds());
     }
+
+    // info.update = function (props) {
+    //   this._div.innerHTML = '<h4>US Population Density</h4>' +  (props ?
+    //     '<b>' + props.name + '</b><br />' + props.density + ' people / mi<sup>2</sup>'
+    //     : 'Hover over a state');
+    // };
+
+    //info.addTo(map);
 
 //END CREATE GEOJSON LAYERS *************************************************************************
 
