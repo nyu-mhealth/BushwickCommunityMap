@@ -48,6 +48,8 @@ app.map = (function(w,d, $, _){
     //all : "SELECT * FROM allwarnings_dc",
     warningLetters : "SELECT * FROM allwarnings_dc WHERE decisiontype = 'Warning Letter'",
     civilPenalties : "SELECT * FROM allwarnings_dc WHERE decisiontype = 'Civil Money Penalty'",
+    //NOT WORKING
+    allContracts : "SELECT * FROM fda_state_contracts",
   };
 
   //HOLLY - research legend templates
@@ -86,6 +88,8 @@ app.map = (function(w,d, $, _){
         }
     });
 
+    
+    //HOLLY GOOD SECTION
     
     // instantiate the Leaflet map object
     el.map = new L.map('map', params);
@@ -179,6 +183,28 @@ function style(feature) {
 
     
 
+
+  //HOLLY - for createlayer from geojson calls - uncomment when working on queries
+  // function loadSynar() {
+  //     // create the layer and add to the map, then will be filled with data
+  //     el.synarLayer = L.geoJson().addTo(el.map);
+  //     el.sqlTrct = new cartodb.SQL({ user: 'legacy', format: 'geojson' });
+  //     el.sqlTrct.execute("select * from synar_states").done(function(geojson) {
+  //     el.synarLayer.addData(geojson);
+  //     });
+  // } 
+
+
+  //HOLLY - for createlayer from geojson calls - uncomment when working on queries
+  // function loadTracts() {
+  //     // create the layer and add to the map, then will be filled with data
+  //     el.tractsLayer = L.geoJson().addTo(el.map);
+  //     el.sqlTrct = new cartodb.SQL({ user: 'legacy', format: 'geojson' });
+  //     el.sqlTrct.execute("select * from dc_tracts_2014").done(function(geojson) {
+  //         el.tractsLayer.addData(geojson);
+  //       });
+  // } 
+
   // function to load map all warnings layer from CartoDB
   var getCDBData = function() {  
     cartodb.createLayer(el.map, el.cdbURL, {
@@ -210,6 +236,25 @@ function style(feature) {
         });
 
 
+        //HOLLY COMMENT - USE THIS FOR CHECKBOX LAYERS OTHER THAN WARNINGS
+        // create and store the dob permits a1 sublayer
+        // el.dobPermitsA1 = layer.createSubLayer({
+        //   sql : "SELECT * FROM exp_codedjobs_a1",
+        //   cartocss : '#exp_codedjobs_a1 {marker-width: 10; marker-fill: hsl(0,0%,30%); marker-line-color: white; marker-line-width: 0.8;}'
+        // });
+
+        // // create and store the dob permits a2a3 sublayer
+        // el.dobPermitsA2A3 = layer.createSubLayer({
+        //   sql : "SELECT * FROM exp_codedjobs_a2a3",
+        //   cartocss : '#exp_codedjobs_a1 {marker-width: 10; marker-fill: hsl(100,0%,50%); marker-line-color: white; marker-line-width: 0.8;}'
+        // });
+
+        // // create and store the dob permits nb sublayer
+        // el.dobPermitsNB = layer.createSubLayer({
+        //   sql : "SELECT * FROM exp_codedjobs_nb",
+        //   cartocss : '#exp_codedjobs_a1 {marker-width: 10; marker-fill: hsl(350,0%,0%); marker-line-color: white; marker-line-width: 0.8;}'         
+        // });
+
         // positions the tool tip in relationship to user's mouse
         // offset it by 5px vertically and horizontally so the mouse arrow won't cover it
         var event = function(e){
@@ -218,6 +263,43 @@ function style(feature) {
                  top:   e.pageY + 5
               });
           };                                
+
+        //HOLLY - LAYERS OTHER THAN WARNINGS INFOWINDOWS - EDIT AND TEST
+        // hide and set interactivity on the DOB permit layers
+        //var num_sublayers = layer.getSubLayerCount();
+        // for (var i = 1; i < num_sublayers; i++) { 
+        //   // turn on interactivity for mousing events
+        //   layer.getSubLayer(i).setInteraction(true);
+        //   // tell cdb what columns to pass for interactivity
+        //   layer.getSubLayer(i).setInteractivity('address, jt_description, ownername, ownerphone, ownerbusin, existingst, proposedst');                    
+        //   // when the user mouses over the dob permit display html & data in a tool tip
+        //   layer.getSubLayer(i).on('featureOver', function(e, pos, latlng, data) {
+        //     $('#tool-tip').html(
+        //                         // text to display when user hovers on dob permit layers
+        //                         '<h4>DOB Permit Info</h4>' +
+        //                         '<hr>' +
+        //                         '<p><strong>Address:</strong> '  + data.address + '</p>' +
+        //                         '<p><strong>Job Description:</strong> ' + data.jt_description + '</p>' +
+        //                         '<p><strong>Owner Name:</strong> '  + data.ownername + '</p>' +
+        //                         '<p><strong>Owner Business:</strong> '  + data.ownerbusin + '</p>' +
+        //                         '<p><strong>Owner Phone:</strong> '  + data.ownerphone + '</p>' +
+        //                         '<p><strong>Existing Building Stories:</strong> '  + data.existingst + '</p>' +
+        //                         '<p><strong>Proposed Building Stories:</strong> '  + data.proposedst + '</p>'
+        //                         );
+        //     $(document).bind('mousemove', event);
+        //     $('#tool-tip').show();            
+        //   });
+          
+        //   // when the user mouses out remove the tool tip
+        //   layer.getSubLayer(i).on('featureOut', function(e,pos,latlng,data){           
+        //     $('#tool-tip').hide();
+        //     $(document).unbind('mousemove', event, false);
+        //   });
+
+          // hide the Layer when map loads
+          //layer.getSubLayer(i).hide();
+         
+        // } // end sublayer for loop
 
 
       // HOLLY hide the FDA Layer when map loads
@@ -305,10 +387,21 @@ function style(feature) {
     // toggle sites of gentrification
     $sg.change(function(){
       if ($sg.is(':checked')) {
+        // for (i=0; i<el.sitesGent.length; i++) {
+        //   el.featureGroup.addLayer(el.sitesGent[i]);  
+        // }
         el.featureGroup.addLayer(el.rheingoldPoly);
+        // el.map.fitBounds(el.featureGroup, {padding: [200, 200]});
+
+        // open popups of markers on load
+        // el.featureGroup.eachLayer(function(layer) {          
+        //   layer.openPopup();
+        // });
         
       } else {
-       
+        // for (i=0; i<el.sitesGent.length; i++) {
+        //   el.featureGroup.removeLayer(el.sitesGent[i]);  
+        // }
         el.featureGroup.removeLayer(el.rheingoldPoly);
       };
     }); 
@@ -322,6 +415,37 @@ function style(feature) {
     //     el.dobPermitsA1.hide();
     //   };
     // });
+
+    // HOLLY COMMENTED OUT toggle A2, A3 minor alterations layer
+    // $a2a3.change(function(){
+    //   if ($a2a3.is(':checked')){
+    //     el.dobPermitsA2A3.show();        
+    //   } else {
+    //     el.dobPermitsA2A3.hide();
+    //   };
+    // });  
+
+    // HOLLY COMMENT OUT - toggle sites of gentrification
+    // $sg.change(function(){
+    //   if ($sg.is(':checked')) {
+    //     for (i=0; i<el.sitesGent.length; i++) {
+    //       el.featureGroup.addLayer(el.sitesGent[i]);  
+    //     }
+    //     el.featureGroup.addLayer(el.rheingoldPoly);
+    //     el.map.fitBounds(el.featureGroup, {padding: [200, 200]});
+
+    //     // open popups of markers on load
+    //     el.featureGroup.eachLayer(function(layer) {          
+    //       layer.openPopup();
+    //     });
+        
+    //   } else {
+    //     for (i=0; i<el.sitesGent.length; i++) {
+    //       el.featureGroup.removeLayer(el.sitesGent[i]);  
+    //     }
+    //     el.featureGroup.removeLayer(el.rheingoldPoly);
+    //   };
+    // }); 
 
   }
   
@@ -367,6 +491,7 @@ function style(feature) {
       } 
     });
   }
+  //HOLLY END OF GEOCODING
 
 
 //HOLLY RESEARCH LEGENDS
