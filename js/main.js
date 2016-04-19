@@ -129,7 +129,7 @@ app.map = (function(w,d, $, _){
     })  
 
     // add geojson for synar
-    loadSynar();
+    loadRheingold();
 
     // add geojson for census tracts
     //loadTracts();
@@ -154,15 +154,43 @@ function style(feature) {
     };
 }
 
-  //HOLLY - for createlayer from geojson calls - uncomment when working on queries
-  function loadSynar() {
-      // create the layer and add to the map, then will be filled with data
-      el.synarLayer = L.geoJson().addTo(el.map);
-      el.sqlTrct = new cartodb.SQL({ user: 'legacy', format: 'geojson' });
-      el.sqlTrct.execute("select * from synar_states").done(function(geojson) {
-      el.synarLayer.addData(geojson);
+  // HOLLY - SYNAR GEOJSON load the geoJSON boundary for the Rheingold development
+  function loadRheingold() {
+    $.getJSON('./data/synar_states.geojson', function(json, textStatus) {
+        el.rheingoldPoly = L.geoJson(json, {
+          style: style
         });
+    });
   } 
+
+  function style(feature) {
+      return {
+        weight: 2,
+        opacity: 1,
+        color: 'white',
+        dashArray: '3',
+        fillOpacity: 0.7,
+        fillColor: getColor(feature.properties.percent)
+      };
+    }
+
+    // get color depending on population density value
+    function getColor(d) {
+      return d > 11 ? '#800026' :
+             d > 7.55  ? '#BD0026' :
+                        '#FFEDA0';
+    }
+
+
+  //HOLLY - for createlayer from geojson calls - uncomment when working on queries
+  // function loadSynar() {
+  //     // create the layer and add to the map, then will be filled with data
+  //     el.synarLayer = L.geoJson().addTo(el.map);
+  //     el.sqlTrct = new cartodb.SQL({ user: 'legacy', format: 'geojson' });
+  //     el.sqlTrct.execute("select * from synar_states").done(function(geojson) {
+  //     el.synarLayer.addData(geojson);
+  //     });
+  // } 
 
 
   //HOLLY - for createlayer from geojson calls - uncomment when working on queries
@@ -353,24 +381,25 @@ function style(feature) {
       };
     });
 
-        // toggle sites of gentrification
+    //HOLLY - SYNAR GEOJSON
+    // toggle sites of gentrification
     $sg.change(function(){
       if ($sg.is(':checked')) {
-        for (i=0; i<el.sitesGent.length; i++) {
-          el.featureGroup.addLayer(el.sitesGent[i]);  
-        }
+        // for (i=0; i<el.sitesGent.length; i++) {
+        //   el.featureGroup.addLayer(el.sitesGent[i]);  
+        // }
         el.featureGroup.addLayer(el.rheingoldPoly);
-        el.map.fitBounds(el.featureGroup, {padding: [200, 200]});
+        // el.map.fitBounds(el.featureGroup, {padding: [200, 200]});
 
         // open popups of markers on load
-        el.featureGroup.eachLayer(function(layer) {          
-          layer.openPopup();
-        });
+        // el.featureGroup.eachLayer(function(layer) {          
+        //   layer.openPopup();
+        // });
         
       } else {
-        for (i=0; i<el.sitesGent.length; i++) {
-          el.featureGroup.removeLayer(el.sitesGent[i]);  
-        }
+        // for (i=0; i<el.sitesGent.length; i++) {
+        //   el.featureGroup.removeLayer(el.sitesGent[i]);  
+        // }
         el.featureGroup.removeLayer(el.rheingoldPoly);
       };
     }); 
