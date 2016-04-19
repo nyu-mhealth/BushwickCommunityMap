@@ -5,13 +5,16 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>NYU mHealth Tobacco Map</title>
+  
   <!-- CSS libraries  -->
   <link href="css/normalize.css" rel="stylesheet">
   <link rel="stylesheet" href="bower_components/leaflet/dist/leaflet.css" />
   <link rel="stylesheet" href="//libs.cartocdn.com/cartodb.js/v3/themes/css/cartodb.css" />
   <link rel="stylesheet" href="//cartodb.github.io/odyssey.js/sandbox/css/slides.css">
+  
   <!-- Mapbox JS -->
   <script src='//api.tiles.mapbox.com/mapbox.js/v2.1.4/mapbox.js'></script>
+  
   <!-- CSS for UI  -->  
   <link rel="stylesheet" type="text/css" href="css/styles.css">
 </head>  
@@ -30,38 +33,31 @@
     <a href="#" id="zoom-out"><img src="images/zoom-out.png"/></a>
   </div>
 
-  <!-- GUI -->
+  <!-- GUI for layer selection-->
   <div id="ui-container" class="ui">
 
       <h4 class="en">Warnings</h4>
       <br/>
-<!--       <a href="#all" id="all" class="button">
-        <span class="en">All Violations</span>
-      </a> -->
       <a href="#warningLetters" id="warningLetters" class="button">
         <span class="en">FDA Warning Letters</span>
       </a>
        <a href="#civilPenalties" id="civilPenalties" class="button">
         <span class="en">FDA Civil Money Penalty</span>
       </a>
-      <!-- LINE BREAK - UNCOMMENT WHEN ADD OTHER LAYERS -->
+      <!-- line break -->
       <hr/>
 
-<!-- Placeholder for buttons or checkboxes for polygon layers -->
+      <!-- Buttons or checkboxes for polygon layers -->
       <h4 class="en">FDA Contracts</h4>
       <br/>
-      <!-- HOLLY - TESTING CONTRACTS -->
       <input type="checkbox" name="dob" class="regular-checkbox dob" value="fda_contracts" id="nb"/>
         <label for="nb"></label><span class="en">State Awards</span>
       <br/>
-
+      <h4 class="en">Synar</h4>
+      <br/>
       <input type="checkbox" name="dob" class="regular-checkbox" value="synar_checkbox" id="synar_checkbox"/>
         <label for="synar_checkbox"></label><span class="en">State Synar Rates</span>
       <br/>
-      
-<!--       <input type="checkbox" name="dob" class="regular-checkbox dob" value="synar" id="a1" />
-        <label for="a1"></label><span class="en">Adult State Smoking Rates</span>
-      <br/> -->
       
   </div> 
 

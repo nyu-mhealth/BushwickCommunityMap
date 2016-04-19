@@ -53,7 +53,8 @@ app.map = (function(w,d, $, _){
 //END SET GLOBAL VARIABLES*******************************************************************************
 
 //BEGIN INIT ********************************************************************************************                                                                       
-  // set up the map and map layers!
+  
+  // set up the map and map layers
   var initMap = function() {
     // map paramaters to pass to Leaflet
     var params = {
@@ -129,7 +130,7 @@ app.map = (function(w,d, $, _){
 
 
 //BEGIN CREATE GEOJSON LAYERS *************************************************************************
-//Beginning creating choropleth with geojson code**************************************
+
   // SYNAR GEOJSON load the geoJSON boundary Synar State Rates
   function loadSynar() {
     $.getJSON('./data/synar_states.geojson', function(json, textStatus) {
@@ -191,10 +192,14 @@ app.map = (function(w,d, $, _){
       map.fitBounds(e.target.getBounds());
     }
 
-//End creating choropleth with geojson code**************************************
+//END CREATE GEOJSON LAYERS *************************************************************************
+
+//BEGIN CREATELAYER LAYERS **************************************************************************
 
   // function to load map all warnings layer from CartoDB
   var getCDBData = function() {  
+    
+    //create warnings layers (warning letters and civil penalties) with viz.json api call and createlayer function
     cartodb.createLayer(el.map, el.cdbURL, {
         cartodb_logo: false, 
         legends: false,
@@ -204,10 +209,10 @@ app.map = (function(w,d, $, _){
         // store the warnings sublayer - all warnings and civil penalties
         layer.getSubLayer(0).setCartoCSS(el.styles.warningLetters);
         layer.getSubLayer(0).setSQL(el.sql.warningLetters);
-        el.fdaWarnings = layer.getSubLayer(0); //HOLLY - change name later
+        el.fdaWarnings = layer.getSubLayer(0); 
 
-
-        //HOLLY - CREATE FDA LAYER ON THE FLY
+        //create fda contracts layer calling just a layer stored on cartodb but not in the map viz.json
+        //uses layer object to grab permissions from viz.json (user name = Legacy)
           el.fdaContracts = layer.createSubLayer({
           sql : "SELECT * FROM fda_state_contracts",
           cartocss : "#allContracts{polygon-fill: #FFFFB2;" +
@@ -260,13 +265,7 @@ app.map = (function(w,d, $, _){
 
   // corresponding cartoCSS & SQL changes to FDA WARNINGS layer buttons
   // legends are displayed or hidden as needed
-  el.fdaWarningsActions = {                          //HOLLY CHANGE NAME LATER
-    // all : function() {
-    //   changeCartoCSS(el.fdaWarnings, el.styles.all);
-    //   changeSQL(el.fdaWarnings, el.sql.all);
-    //   renderLegend(null);
-    //   return true;
-    // },
+  el.fdaWarningsActions = {                          
      warningLetters : function() {
       changeCartoCSS(el.fdaWarnings, el.styles.warningLetters);
       changeSQL(el.fdaWarnings, el.sql.warningLetters);
