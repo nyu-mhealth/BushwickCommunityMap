@@ -343,6 +343,17 @@ input{
   font-family: Helvetica, sans-serif;
 }
 
+/*HOLLY ADD FOR CHOROPLETH MAPS*/
+#ui-choropleth {
+  position: absolute; 
+  bottom: 108px; 
+  right: 40px; 
+  width: 200px;
+  padding: 12px; 
+  z-index: 61;
+  font-family: Helvetica, sans-serif;
+}
+
 .ui h4 {
   padding: 0;
   margin: 0;
