@@ -319,7 +319,7 @@ function highlightFeature(e) {
     // checkboxes for dob permit layer & stories
     var checkboxDOB = $('input.dob:checkbox'),
           $nb = $('#nb'),
-          $sg = $('#sites-of-gentrification');
+          $sg = $('#synar_checkbox');
 
     // HOLLY THIS IS FOR FDA TEST toggle NB new buildings layer
     $nb.change(function(){
