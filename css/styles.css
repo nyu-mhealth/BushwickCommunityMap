@@ -333,6 +333,32 @@ input{
   background: url('../images/search_button.svg') no-repeat;
 }
 
+/*HOLLY ADD FOR CHOROPLETH MAPS*/
+/*#info-choropleth {
+  position: absolute; 
+  bottom: 50px; 
+  right: 40px; 
+  width: 200px;
+  padding: 12px; 
+  z-index: 61;
+  font-family: Helvetica, sans-serif;
+}*/
+
+.infoChoro {
+      padding: 6px 8px;
+      font: 14px/16px Arial, Helvetica, sans-serif;
+      background: white;
+      background: rgba(255,255,255,0.8);
+      box-shadow: 0 0 15px rgba(0,0,0,0.2);
+      border-radius: 5px;
+}
+
+.infoChoro h4 {
+      margin: 0 0 5px;
+      color: #777;
+}
+
+
 #ui-container {
   position: absolute; 
   top: 108px; 
@@ -340,17 +366,6 @@ input{
   width: 200px;
   padding: 12px; 
   z-index: 60;
-  font-family: Helvetica, sans-serif;
-}
-
-/*HOLLY ADD FOR CHOROPLETH MAPS*/
-#ui-choropleth {
-  position: absolute; 
-  bottom: 50px; 
-  right: 40px; 
-  width: 200px;
-  padding: 12px; 
-  z-index: 61;
   font-family: Helvetica, sans-serif;
 }
 

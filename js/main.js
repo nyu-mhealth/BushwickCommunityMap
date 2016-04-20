@@ -1,3 +1,4 @@
+
 /*** Global object that contains the app ***/
 var app = app || {};
 
@@ -141,6 +142,23 @@ app.map = (function(w,d, $, _){
     });
   } 
 
+  // // control that shows state info on hover
+    // var info = L.control({position: 'bottomright'});
+
+    // info.onAdd = function (el.map) {
+    //   this._div = L.DomUtil.create('div', 'info');
+    //   this.update();
+    //   return this._div;
+    // };
+
+    // info.update = function (props) {
+    //   this._div.innerHTML = '<h4>Youth Violations</h4>' +  (props ?
+    //     '<b>' + props.name + '</b><br />' + props.percent + ' reported violations'
+    //     : 'Click a state');
+    // };
+    // info.addTo(map);
+
+
   //set style and color for geojson choropleth
   function style(feature) {
       return {
@@ -162,12 +180,14 @@ app.map = (function(w,d, $, _){
    
     //set mouse over and click events on polygons 
     function onEachFeature(feature, layer) {
+      layer.bindPopup(feature.properties.label,name);
       layer.on({
         mouseover: highlightFeature,
         mouseout: resetHighlight,
         click: zoomToFeature
       });
     }      
+
 
     function highlightFeature(e) {
       var layer = e.target;
@@ -190,15 +210,10 @@ app.map = (function(w,d, $, _){
 
     function zoomToFeature(e) {
       el.map.fitBounds(e.target.getBounds());
+      // info.update(e.target.feature.properties);
+      //alert("you clicked me");
     }
 
-    // info.update = function (props) {
-    //   this._div.innerHTML = '<h4>US Population Density</h4>' +  (props ?
-    //     '<b>' + props.name + '</b><br />' + props.density + ' people / mi<sup>2</sup>'
-    //     : 'Hover over a state');
-    // };
-
-    //info.addTo(map);
 
 //END CREATE GEOJSON LAYERS *************************************************************************
 
