@@ -43,10 +43,10 @@ app.map = (function(w,d, $, _){
 
   //HOLLY - research legend templates
   // compile the underscore legend template for rendering map legends for choropleth layers
-  // _.templateSettings.variable = "legend";
-  // el.template = _.template($("script.template").html());
+  _.templateSettings.variable = "legend";
+  el.template = _.template($("script.template").html());
 
-  // el.legend = $('#ui-legend');
+  el.legend = $('#ui-legend');
 
   // use google maps api geocoder
   el.geocoder = new google.maps.Geocoder();
@@ -142,23 +142,6 @@ app.map = (function(w,d, $, _){
     });
   } 
 
-  // // control that shows state info on hover
-    // var info = L.control({position: 'bottomright'});
-
-    // info.onAdd = function (el.map) {
-    //   this._div = L.DomUtil.create('div', 'info');
-    //   this.update();
-    //   return this._div;
-    // };
-
-    // info.update = function (props) {
-    //   this._div.innerHTML = '<h4>Youth Violations</h4>' +  (props ?
-    //     '<b>' + props.name + '</b><br />' + props.percent + ' reported violations'
-    //     : 'Click a state');
-    // };
-    // info.addTo(map);
-
-
   //set style and color for geojson choropleth
   function style(feature) {
       return {
@@ -173,14 +156,15 @@ app.map = (function(w,d, $, _){
 
     // get color depending on percent field
     function getColor(d) {
-      return d > 11 ? '#800026' :
-             d > 7.55  ? '#BD0026' :
-                        '#FFEDA0';
+      return d > 11 ? '#2C7FB8' :
+             d > 7.55  ? '#7FCDBB' :
+                        '#EDF8B1';
     }
    
     //set mouse over and click events on polygons 
     function onEachFeature(feature, layer) {
-      layer.bindPopup(feature.properties.label,name);
+      //have popup show 
+      layer.bindPopup("<center>" + feature.properties.name + "<br><center> Violation Rate: " + feature.properties.label);
       layer.on({
         mouseover: highlightFeature,
         mouseout: resetHighlight,
@@ -301,6 +285,16 @@ app.map = (function(w,d, $, _){
       renderLegend(el.legendData.civilPenalties);
       return true;
     },
+      synar_checkbox : function() {
+      renderLegend(el.legendData.synar_checkbox);
+      return true;
+    },
+      // availfar : function() {
+      // changeCartoCSS(el.taxLots, el.styles.availFAR);
+      // changeSQL(el.taxLots, el.sql.all);
+      // renderLegend(el.legendData.availFAR);
+      // return true;
+    // },
   };
 
   // add FDA WARNINGS layer button event listeners
@@ -335,7 +329,8 @@ app.map = (function(w,d, $, _){
     // toggle sites of gentrification
     $sg.change(function(){
       if ($sg.is(':checked')) {
-        el.featureGroup.addLayer(el.synarPoly);        
+        el.featureGroup.addLayer(el.synarPoly);
+        el.fdaWarningsActions['synar_checkbox']();        
       } else {    
         el.featureGroup.removeLayer(el.synarPoly);
       };
@@ -388,19 +383,19 @@ app.map = (function(w,d, $, _){
 
 
 //HOLLY RESEARCH LEGENDS
-  // function to render choropleth legends
-  // var renderLegend = function(data) {
-  //   if (data === null) { 
-  //     el.legend.addClass('hidden');
-  //     return;
-  //   }
-  //   var legendData = {
-  //     title : data.title,
-  //     items : data.items,// array of objects containing color and values
-  //   };    
-  //   el.legend.html(el.template(legendData));
-  //   if (el.legend.hasClass('hidden')) el.legend.removeClass('hidden');
-  // };
+//  function to render choropleth legends
+  var renderLegend = function(data) {
+    if (data === null) { 
+      el.legend.addClass('hidden');
+      return;
+    }
+    var legendData = {
+      title : data.title,
+      items : data.items,// array of objects containing color and values
+    };    
+    el.legend.html(el.template(legendData));
+    if (el.legend.hasClass('hidden')) el.legend.removeClass('hidden');
+  };
 
   // set up custom zoom buttons
   var initZoomButtons = function(){
@@ -416,6 +411,23 @@ app.map = (function(w,d, $, _){
   // data passed to renderLegend();
   // to do: generate this dynamically from cartocss
   el.legendData = {
+     synar_checkbox : {
+      title : "Synar Retailer Violation Rates",
+      items : [
+        {
+          color : "#2C7FB8",
+          label : "percent <= 22.5"
+        },
+        {
+          color: "#7FCDBB",
+          label : "percent <= 11"
+        },
+        {
+          color : "#EDF8B1",
+          label : "percent <= 7.55"
+        }
+      ]
+    },
     availFAR : {
       title : "Available FAR",
       items : [
