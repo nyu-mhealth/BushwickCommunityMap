@@ -39,6 +39,7 @@ app.map = (function(w,d, $, _){
   el.sql = {
     warningLetters : "SELECT * FROM allwarnings_dc WHERE decisiontype = 'Warning Letter'",
     civilPenalties : "SELECT * FROM allwarnings_dc WHERE decisiontype = 'Civil Money Penalty'",
+    synarRates: "SELECT * FROM synar_states",
   };
 
   //HOLLY - research legend templates
@@ -286,7 +287,7 @@ app.map = (function(w,d, $, _){
       return true;
     },
       synar_checkbox : function() {
-      renderLegend(el.legendData.synar_checkbox);
+      renderLegend(el.legendData.synarRates);
       return true;
     },
       // availfar : function() {
@@ -333,6 +334,7 @@ app.map = (function(w,d, $, _){
         el.fdaWarningsActions['synar_checkbox']();        
       } else {    
         el.featureGroup.removeLayer(el.synarPoly);
+        el.legend.addClass('hidden');
       };
     }); 
 
@@ -411,7 +413,7 @@ app.map = (function(w,d, $, _){
   // data passed to renderLegend();
   // to do: generate this dynamically from cartocss
   el.legendData = {
-     synar_checkbox : {
+     synarRates : {
       title : "Synar Retailer Violation Rates",
       items : [
         {
