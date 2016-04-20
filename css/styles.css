@@ -346,7 +346,7 @@ input{
 /*HOLLY ADD FOR CHOROPLETH MAPS*/
 #ui-choropleth {
   position: absolute; 
-  bottom: 108px; 
+  bottom: 50px; 
   right: 40px; 
   width: 200px;
   padding: 12px; 

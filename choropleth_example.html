@@ -27,7 +27,7 @@
 			color: #777;
 		}
 
-		.legend {
+/*		.legend {
 			text-align: left;
 			line-height: 18px;
 			color: #555;
@@ -38,7 +38,7 @@
 			float: left;
 			margin-right: 8px;
 			opacity: 0.7;
-		}
+		}*/
 	</style>
 </head>
 <body>
@@ -115,18 +115,20 @@
 				layer.bringToFront();
 			}
 
-			info.update(layer.feature.properties);
+			//info.update(layer.feature.properties);
 		}
+
 
 		var geojson;
 
 		function resetHighlight(e) {
 			geojson.resetStyle(e.target);
-			info.update();
+			//info.update();
 		}
 
 		function zoomToFeature(e) {
 			map.fitBounds(e.target.getBounds());
+			info.update(e.target.feature.properties);
 		}
 
 		function onEachFeature(feature, layer) {
@@ -145,29 +147,29 @@
 		map.attributionControl.addAttribution('Population data &copy; <a href="http://census.gov/">US Census Bureau</a>');
 
 
-		var legend = L.control({position: 'bottomright'});
+		// var legend = L.control({position: 'bottomright'});
 
-		legend.onAdd = function (map) {
+		// legend.onAdd = function (map) {
 
-			var div = L.DomUtil.create('div', 'info legend'),
-				grades = [0, 10, 20, 50, 100, 200, 500, 1000],
-				labels = [],
-				from, to;
+		// 	var div = L.DomUtil.create('div', 'info legend'),
+		// 		grades = [0, 10, 20, 50, 100, 200, 500, 1000],
+		// 		labels = [],
+		// 		from, to;
 
-			for (var i = 0; i < grades.length; i++) {
-				from = grades[i];
-				to = grades[i + 1];
+		// 	for (var i = 0; i < grades.length; i++) {
+		// 		from = grades[i];
+		// 		to = grades[i + 1];
 
-				labels.push(
-					'<i style="background:' + getColor(from + 1) + '"></i> ' +
-					from + (to ? '&ndash;' + to : '+'));
-			}
+		// 		labels.push(
+		// 			'<i style="background:' + getColor(from + 1) + '"></i> ' +
+		// 			from + (to ? '&ndash;' + to : '+'));
+		// 	}
 
-			div.innerHTML = labels.join('<br>');
-			return div;
-		};
+		// 	div.innerHTML = labels.join('<br>');
+		// 	return div;
+		// };
 
-		legend.addTo(map);
+		// legend.addTo(map);
 
 	</script>
 </body>
