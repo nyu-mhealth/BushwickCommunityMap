@@ -267,23 +267,6 @@ app.map = (function(w,d, $, _){
         layer.getSubLayer(0).setSQL(el.sql.warningLetters);
         el.fdaWarnings = layer.getSubLayer(0); 
 
-        //create fda contracts layer calling just a layer stored on cartodb but not in the map viz.json
-        //uses layer object to grab permissions from viz.json (user name = Legacy)
-        //   el.fdaContracts = layer.createSubLayer({
-        //   sql : "SELECT * FROM fda_state_contracts",
-        //   cartocss : "#allContracts{polygon-fill: #FFFFB2;" +
-        //                                 "polygon-opacity: 0.7;" +
-        //                                 "line-color: #FFF;" +
-        //                                 "line-width: 0.5;" +
-        //                                 "line-opacity: 1;" +
-        //                                 "}" +
-        //                                 '#fda_state_contracts [ most_recent_award_amount <= 4334123] {polygon-fill: #BD0026;}' +
-        //                                 '#fda_state_contracts [ most_recent_award_amount <= 3491329.2] {polygon-fill: #F03B20;}' +
-        //                                 '#fda_state_contracts [ most_recent_award_amount <= 2648535.4000000004] {polygon-fill: #FD8D3C;}' +
-        //                                 '#fda_state_contracts [ most_recent_award_amount <= 1805741.6] {polygon-fill: #FECC5C;}' +
-        //                                 '#fda_state_contracts [ most_recent_award_amount <= 962947.8] {polygon-fill: #FFFFB2;}',
-        // });
-
 
         // positions the tool tip in relationship to user's mouse
         // offset it by 5px vertically and horizontally so the mouse arrow won't cover it
@@ -294,9 +277,6 @@ app.map = (function(w,d, $, _){
               });
           };                                
 
-
-      // HOLLY hide the FDA Layer when map loads
-      // el.fdaContracts.hide();
 
       // add the cdb layer to the map
       el.map.addLayer(layer, false);
@@ -343,12 +323,6 @@ app.map = (function(w,d, $, _){
       return true;
     },
     
-      // availfar : function() {
-      // changeCartoCSS(el.taxLots, el.styles.availFAR);
-      // changeSQL(el.taxLots, el.sql.all);
-      // renderLegend(el.legendData.availFAR);
-      // return true;
-    // },
   };
 
   // add FDA WARNINGS layer button event listeners
