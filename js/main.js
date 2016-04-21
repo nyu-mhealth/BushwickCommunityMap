@@ -203,9 +203,9 @@ app.map = (function(w,d, $, _){
 
     // get color depending on percent field
     function getColorContracts(d) {
-      return d > 9350000 ? '#2C7FB8' :
-             d > 4785000  ? '#99D8C9' :
-                        '#2CA25F';
+      return d > 9350000  ? '#2C7FB8' :
+             d > 4800000 ? '#99D8C9' :
+                          '#2CA25F' ;
     }
    
     //set mouse over and click events on polygons 
@@ -474,32 +474,32 @@ app.map = (function(w,d, $, _){
       items : [
         {
           color : "#2C7FB8",
-          label : "< 22.5"
+          label : "<= 22.5"
         },
         {
           color: "#7FCDBB",
-          label : "< 11"
+          label : "<= 11"
         },
         {
           color : "#EDF8B1",
-          label : "< 7.55"
+          label : "<= 7.55"
         }
       ]
     },
     fdaContracts : {
-      title : "Synar Retailer Violation Rates",
+      title : "FDA Inspection Contract Totals",
       items : [
         {
-          color : "#2C7FB8",
-          label : "< 22.5"
+          color : "#2CA25F",
+          label : "< $14,000,000"
         },
         {
-          color: "#7FCDBB",
-          label : "< 11"
+          color: "#99D8C9",
+          label : "< $9,350,000"
         },
         {
-          color : "#EDF8B1",
-          label : "< 7.55"
+          color : "#E5F5F9",
+          label : "< $4,800,000"
         }
       ]
     },
