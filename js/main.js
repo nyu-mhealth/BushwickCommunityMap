@@ -14,10 +14,12 @@ app.map = (function(w,d, $, _){
   var el = {
     baseLayers : null,
     cdbURL : null,
+    contractsPoly : null, 
     fdaWarnings : null,
     fdaWarningsActions : null,
     fdaContracts : null,   
     featureGroup : null,
+    featureGroupContracts : null,
     geocoder : null,
     geocoderMarker : null, 
     legend : null,
@@ -40,6 +42,7 @@ app.map = (function(w,d, $, _){
     warningLetters : "SELECT * FROM allwarnings_dc WHERE decisiontype = 'Warning Letter'",
     civilPenalties : "SELECT * FROM allwarnings_dc WHERE decisiontype = 'Civil Money Penalty'",
     synarRates: "SELECT * FROM synar_states",
+    fdaContracts: "SELECT * FROM fda_state_contracts",
   };
 
   //HOLLY - research legend templates
@@ -96,9 +99,11 @@ app.map = (function(w,d, $, _){
     var attr = "<a href='https://www.mapbox.com/about/maps/' target='_blank'>&copy; Mapbox &copy; OpenStreetMap</a>"
     el.map.attributionControl.addAttribution(attr);
 
-    //HOLLY MAYBE USE THIS LOGIC LATER
-    // feature group to store geoJSON
-    el.featureGroup = L.featureGroup().addTo(el.map);    
+
+    // feature groups to store geoJSON
+    el.featureGroup = L.featureGroup().addTo(el.map); 
+    //create another featureGroup for storing
+    el.featureGroupContracts = L.featureGroup().addTo(el.map);   
     
     // add Bing satelitte imagery layer
     el.satellite = new L.BingLayer('AkuX5_O7AVBpUN7ujcWGCf4uovayfogcNVYhWKjbz2Foggzu8cYBxk6e7wfQyBQW');
@@ -120,8 +125,9 @@ app.map = (function(w,d, $, _){
     })  
 
     //CALL THE FUNCTIONS TO CREATE MAP LAYERS
-    // add geojson for synar
+    // add geojson layers
     loadSynar();
+    loadContracts();
 
     // add the warnings layer from cartodb
     getCDBData();
@@ -171,8 +177,49 @@ app.map = (function(w,d, $, _){
         mouseout: resetHighlight,
         click: zoomToFeature
       });
-    }      
+    }   
+// END FOR JUST SYNAR*************************************************
 
+  // Contracts GEOJSON load the geoJSON boundary FDA Contracts
+  function loadContracts() {
+    $.getJSON('./data/fda_state_contracts.geojson', function(json, textStatus) {
+        el.contractsPoly = L.geoJson(json, {
+          style: styleContracts,
+          onEachFeature: onEachFeatureContracts
+        });
+    });
+  } 
+  //set style and color for geojson choropleth
+  function styleContracts(feature) {
+      return {
+        weight: 2,
+        opacity: 1,
+        color: 'white',
+        dashArray: '3',
+        fillOpacity: 0.7,
+        fillColor: getColorContracts(feature.properties.total_num)
+      };
+    }
+
+    // get color depending on percent field
+    function getColorContracts(d) {
+      return d > 9350000 ? '#2C7FB8' :
+             d > 4785000  ? '#99D8C9' :
+                        '#2CA25F';
+    }
+   
+    //set mouse over and click events on polygons 
+    function onEachFeatureContracts(feature, layer) {
+      //have popup show 
+      layer.bindPopup("<center>" + feature.properties.name + "<br><center> Total Awards: " + feature.properties.total_label);
+      layer.on({
+        mouseover: highlightFeature,
+        mouseout: resetHighlight,
+        click: zoomToFeature
+      });
+    }  
+     
+// END FOR JUST CONTRACTS*************************************************
 
     function highlightFeature(e) {
       var layer = e.target;
@@ -190,6 +237,7 @@ app.map = (function(w,d, $, _){
 
     function resetHighlight(e) {
        el.synarPoly.resetStyle(e.target);
+       el.contractsPoly.resetStyle(e.target);      
       // info.update();
     }
 
@@ -221,20 +269,20 @@ app.map = (function(w,d, $, _){
 
         //create fda contracts layer calling just a layer stored on cartodb but not in the map viz.json
         //uses layer object to grab permissions from viz.json (user name = Legacy)
-          el.fdaContracts = layer.createSubLayer({
-          sql : "SELECT * FROM fda_state_contracts",
-          cartocss : "#allContracts{polygon-fill: #FFFFB2;" +
-                                        "polygon-opacity: 0.7;" +
-                                        "line-color: #FFF;" +
-                                        "line-width: 0.5;" +
-                                        "line-opacity: 1;" +
-                                        "}" +
-                                        '#fda_state_contracts [ most_recent_award_amount <= 4334123] {polygon-fill: #BD0026;}' +
-                                        '#fda_state_contracts [ most_recent_award_amount <= 3491329.2] {polygon-fill: #F03B20;}' +
-                                        '#fda_state_contracts [ most_recent_award_amount <= 2648535.4000000004] {polygon-fill: #FD8D3C;}' +
-                                        '#fda_state_contracts [ most_recent_award_amount <= 1805741.6] {polygon-fill: #FECC5C;}' +
-                                        '#fda_state_contracts [ most_recent_award_amount <= 962947.8] {polygon-fill: #FFFFB2;}',
-        });
+        //   el.fdaContracts = layer.createSubLayer({
+        //   sql : "SELECT * FROM fda_state_contracts",
+        //   cartocss : "#allContracts{polygon-fill: #FFFFB2;" +
+        //                                 "polygon-opacity: 0.7;" +
+        //                                 "line-color: #FFF;" +
+        //                                 "line-width: 0.5;" +
+        //                                 "line-opacity: 1;" +
+        //                                 "}" +
+        //                                 '#fda_state_contracts [ most_recent_award_amount <= 4334123] {polygon-fill: #BD0026;}' +
+        //                                 '#fda_state_contracts [ most_recent_award_amount <= 3491329.2] {polygon-fill: #F03B20;}' +
+        //                                 '#fda_state_contracts [ most_recent_award_amount <= 2648535.4000000004] {polygon-fill: #FD8D3C;}' +
+        //                                 '#fda_state_contracts [ most_recent_award_amount <= 1805741.6] {polygon-fill: #FECC5C;}' +
+        //                                 '#fda_state_contracts [ most_recent_award_amount <= 962947.8] {polygon-fill: #FFFFB2;}',
+        // });
 
 
         // positions the tool tip in relationship to user's mouse
@@ -248,7 +296,7 @@ app.map = (function(w,d, $, _){
 
 
       // HOLLY hide the FDA Layer when map loads
-      el.fdaContracts.hide();
+      // el.fdaContracts.hide();
 
       // add the cdb layer to the map
       el.map.addLayer(layer, false);
@@ -290,6 +338,11 @@ app.map = (function(w,d, $, _){
       renderLegend(el.legendData.synarRates);
       return true;
     },
+      nb : function() {
+      renderLegend(el.legendData.fdaContracts);
+      return true;
+    },
+    
       // availfar : function() {
       // changeCartoCSS(el.taxLots, el.styles.availFAR);
       // changeSQL(el.taxLots, el.sql.all);
@@ -320,14 +373,17 @@ app.map = (function(w,d, $, _){
     // HOLLY THIS IS FOR FDA TEST toggle NB new buildings layer
     $nb.change(function(){
       if ($nb.is(':checked')){
-        el.fdaContracts.show();    
+        // el.fdaContracts.show();
+        el.featureGroupContracts.addLayer(el.contractsPoly);
+        el.fdaWarningsActions['nb']();           
       } else {
-        el.fdaContracts.hide();
+        // el.fdaContracts.hide();
+        el.featureGroupContracts.removeLayer(el.contractsPoly);
+        el.legend.addClass('hidden');
       };
     });
 
-    //HOLLY - SYNAR GEOJSON
-    // toggle sites of gentrification
+    //HOLLY - toggle SYNAR GEOJSON
     $sg.change(function(){
       if ($sg.is(':checked')) {
         el.featureGroup.addLayer(el.synarPoly);
@@ -418,121 +474,138 @@ app.map = (function(w,d, $, _){
       items : [
         {
           color : "#2C7FB8",
-          label : "percent <= 22.5"
+          label : "< 22.5"
         },
         {
           color: "#7FCDBB",
-          label : "percent <= 11"
+          label : "< 11"
         },
         {
           color : "#EDF8B1",
-          label : "percent <= 7.55"
+          label : "< 7.55"
         }
       ]
     },
-    availFAR : {
-      title : "Available FAR",
+    fdaContracts : {
+      title : "Synar Retailer Violation Rates",
       items : [
         {
-          color : "#BD0026",
-          label : "3.3 - 4"        
+          color : "#2C7FB8",
+          label : "< 22.5"
         },
         {
-          color : "#F03B20",
-          label : "2.5 - 3.2"
+          color: "#7FCDBB",
+          label : "< 11"
         },
         {
-          color : "#FD8D3C",
-          label : "1.7 - 2.4"
-        },
-        {
-          color: "#FECC5C",
-          label : "0.9 - 1.6"
-        },
-        {
-          color : "#FFFFB2",
-          label : "0 - 0.8"
+          color : "#EDF8B1",
+          label : "< 7.55"
         }
       ]
     },
-    yearBuilt : {
-      title : "Year Built",
-      items : [
-      {
-        color : "#7a0177",
-        label : "2005-2014"
-      },
-      {
-        color : "#ae017e",
-        label : "2001-2004"
-      },
-      {
-        color : "#dd3497",
-        label : "1991-2000"
-      },
-      {
-        color : "#f768a1;",
-        label : "1974-1990"
-      },
-      {
-        color : "#fa9fb5",
-        label : "1934-1973"
-      },
-      {
-        color : "#fcc5c0",
-        label : "1901-1933"
-      },
-      {
-        color : "#feebe2",
-        label : "1800-1900"
-      },                                    
-      ]
-    },
-    landuse: {
-      title: "Land Use",
-      items: [
-      {
-        color: "#A6CEE3",
-        label: "Multi-Family Walkup"
-      },
-      {
-        color: "#1F78B4",
-        label: "1 & 2 Family Bldgs"
-      },
-      {
-        color: "#B2DF8A",
-        label: "Mixed Resid & Comm"
-      },
-      {
-        color: "#33A02C",
-        label: "Parking Facilities"
-      },
-      {
-        color: "#FB9A99",
-        label: "Vacant Land"
-      },
-      {
-        color: "#E31A1C",
-        label: "Commerical & Office"
-      },
-      {
-        color: "#FDBF6F",
-        label: "Industrial & Mfg"
-      },
-      {
-        color: "#FF7F00",
-        label: "Public Facil & Instns"
-      },
-      {
-        color: "#6A3D9A;",
-        label: "Open Space & Rec"
-      },
-      {
-        color: "#CAB2D6",
-        label: "N/A"
-      },                                                        
-      ]
-    }    
+    // availFAR : {
+    //   title : "Available FAR",
+    //   items : [
+    //     {
+    //       color : "#BD0026",
+    //       label : "3.3 - 4"        
+    //     },
+    //     {
+    //       color : "#F03B20",
+    //       label : "2.5 - 3.2"
+    //     },
+    //     {
+    //       color : "#FD8D3C",
+    //       label : "1.7 - 2.4"
+    //     },
+    //     {
+    //       color: "#FECC5C",
+    //       label : "0.9 - 1.6"
+    //     },
+    //     {
+    //       color : "#FFFFB2",
+    //       label : "0 - 0.8"
+    //     }
+    //   ]
+    // },
+    // yearBuilt : {
+    //   title : "Year Built",
+    //   items : [
+    //   {
+    //     color : "#7a0177",
+    //     label : "2005-2014"
+    //   },
+    //   {
+    //     color : "#ae017e",
+    //     label : "2001-2004"
+    //   },
+    //   {
+    //     color : "#dd3497",
+    //     label : "1991-2000"
+    //   },
+    //   {
+    //     color : "#f768a1;",
+    //     label : "1974-1990"
+    //   },
+    //   {
+    //     color : "#fa9fb5",
+    //     label : "1934-1973"
+    //   },
+    //   {
+    //     color : "#fcc5c0",
+    //     label : "1901-1933"
+    //   },
+    //   {
+    //     color : "#feebe2",
+    //     label : "1800-1900"
+    //   },                                    
+    //   ]
+    // },
+    // landuse: {
+    //   title: "Land Use",
+    //   items: [
+    //   {
+    //     color: "#A6CEE3",
+    //     label: "Multi-Family Walkup"
+    //   },
+    //   {
+    //     color: "#1F78B4",
+    //     label: "1 & 2 Family Bldgs"
+    //   },
+    //   {
+    //     color: "#B2DF8A",
+    //     label: "Mixed Resid & Comm"
+    //   },
+    //   {
+    //     color: "#33A02C",
+    //     label: "Parking Facilities"
+    //   },
+    //   {
+    //     color: "#FB9A99",
+    //     label: "Vacant Land"
+    //   },
+    //   {
+    //     color: "#E31A1C",
+    //     label: "Commerical & Office"
+    //   },
+    //   {
+    //     color: "#FDBF6F",
+    //     label: "Industrial & Mfg"
+    //   },
+    //   {
+    //     color: "#FF7F00",
+    //     label: "Public Facil & Instns"
+    //   },
+    //   {
+    //     color: "#6A3D9A;",
+    //     label: "Open Space & Rec"
+    //   },
+    //   {
+    //     color: "#CAB2D6",
+    //     label: "N/A"
+    //   },                                                        
+    //   ]
+    // }    
   };
 
   // get it all going!
