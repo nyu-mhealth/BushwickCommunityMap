@@ -216,9 +216,9 @@ app.map = (function(w,d, $, _){
 
     // get color depending on percent field
     function getColorContracts(d) {
-      return d > 9350000  ? '#2C7FB8' :
+      return d > 9350000  ? '#2CA25F' :
              d > 4800000 ? '#99D8C9' :
-                          '#2CA25F' ;
+                          '#E5F5F9' ;
     }
    
     //set mouse over and click events on polygons 
