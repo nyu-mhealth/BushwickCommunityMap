@@ -140,7 +140,12 @@ app.map = (function(w,d, $, _){
 //BEGIN CREATE GEOJSON LAYERS *************************************************************************
 
   // SYNAR GEOJSON load the geoJSON boundary Synar State Rates
+  
+  //var GeojsonFile;
+
+
   function loadSynar() {
+    GeojsonFile = "synar_states.geojson"
     $.getJSON('./data/synar_states.geojson', function(json, textStatus) {
         el.synarPoly = L.geoJson(json, {
           style: style,
@@ -151,6 +156,9 @@ app.map = (function(w,d, $, _){
 
   //set style and color for geojson choropleth
   function style(feature) {
+      // if (GeojsonFile == "synar_states.geojson") {
+      //   var fillColorField = feature.properties.percent
+      // }
       return {
         weight: 2,
         opacity: 1,
@@ -174,10 +182,15 @@ app.map = (function(w,d, $, _){
       layer.bindPopup("<center>" + feature.properties.name + "<br><center> Violation Rate: " + feature.properties.label);
       layer.on({
         mouseover: highlightFeature,
-        mouseout: resetHighlight,
+        mouseout: resetHighlightSynar,
         click: zoomToFeature
       });
-    }   
+    } 
+
+    function resetHighlightSynar(e) {
+       el.synarPoly.resetStyle(e.target);    
+      // info.update();
+    }  
 // END FOR JUST SYNAR*************************************************
 
   // Contracts GEOJSON load the geoJSON boundary FDA Contracts
@@ -214,10 +227,15 @@ app.map = (function(w,d, $, _){
       layer.bindPopup("<center>" + feature.properties.name + "<br><center> Total Awards: " + feature.properties.total_label);
       layer.on({
         mouseover: highlightFeature,
-        mouseout: resetHighlight,
+        mouseout: resetHighlightContracts,
         click: zoomToFeature
       });
-    }  
+    } 
+
+    function resetHighlightContracts(e) {
+       el.contractsPoly.resetStyle(e.target);      
+      // info.update();
+    } 
      
 // END FOR JUST CONTRACTS*************************************************
 
@@ -235,18 +253,12 @@ app.map = (function(w,d, $, _){
       //info.update(layer.feature.properties);
     }
 
-    function resetHighlight(e) {
-       el.synarPoly.resetStyle(e.target);
-       el.contractsPoly.resetStyle(e.target);      
-      // info.update();
-    }
 
     function zoomToFeature(e) {
       el.map.fitBounds(e.target.getBounds());
       // info.update(e.target.feature.properties);
       //alert("you clicked me");
     }
-
 
 //END CREATE GEOJSON LAYERS *************************************************************************
 
@@ -333,7 +345,6 @@ app.map = (function(w,d, $, _){
       $(this).addClass('selected');
       el.fdaWarningsActions[$(this).attr('id')]();
       el.fdaWarnings.show();
-
     }); 
   }
 
