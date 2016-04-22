@@ -146,8 +146,7 @@ app.map = (function(w,d, $, _){
 
   function loadSynar() {
     GeojsonFile = "synar_states.geojson"
-    // $.getJSON('./data/synar_states.geojson', function(json, textStatus) {
-    $.getJSON('synar_states.geojson', function(json, textStatus) {
+    $.getJSON('./data/synar_states.geojson', function(json, textStatus) {
         el.synarPoly = L.geoJson(json, {
           style: style,
           onEachFeature: onEachFeature
@@ -196,8 +195,7 @@ app.map = (function(w,d, $, _){
 
   // Contracts GEOJSON load the geoJSON boundary FDA Contracts
   function loadContracts() {
-    // $.getJSON('./data/fda_state_contracts.geojson', function(json, textStatus) {
-    $.getJSON('fda_state_contracts.geojson', function(json, textStatus) {
+    $.getJSON('./data/fda_state_contracts.geojson', function(json, textStatus) {
         el.contractsPoly = L.geoJson(json, {
           style: styleContracts,
           onEachFeature: onEachFeatureContracts
