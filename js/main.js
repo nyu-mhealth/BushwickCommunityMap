@@ -89,7 +89,8 @@ app.map = (function(w,d, $, _){
     el.map = new L.map('map', params);
     
     // api key for mapbox tiles - HOLLY GET OWN TOKEN
-    L.mapbox.accessToken = 'pk.eyJ1IjoiY2hlbnJpY2siLCJhIjoiLVhZMUZZZyJ9.HcNi26J3P-MiOmBKYHIbxw';
+    // L.mapbox.accessToken = 'pk.eyJ1IjoiY2hlbnJpY2siLCJhIjoiLVhZMUZZZyJ9.HcNi26J3P-MiOmBKYHIbxw';
+    L.mapbox.accessToken = 'pk.eyJ1Ijoibnl1bWhlYWx0aCIsImEiOiJjaW5xMXU5d2IxMDlldWdseW9zbXl3dG94In0.pC5lMAc_tKvgtUcHquXuwg';
 
     // tileLayer for mapbox basemap - HOLLY RESEARCH TILE CREATION
     el.mapboxTiles = L.mapbox.tileLayer('chenrick.map-3gzk4pem');
@@ -195,7 +196,7 @@ app.map = (function(w,d, $, _){
 
   // Contracts GEOJSON load the geoJSON boundary FDA Contracts
   function loadContracts() {
-    $.getJSON('./data/fda_state_contracts.geojson', function(json, textStatus) {
+    $.getJSON('./data/fda_state_contracts.geojson', function(json, textStatus) {  
         el.contractsPoly = L.geoJson(json, {
           style: styleContracts,
           onEachFeature: onEachFeatureContracts
@@ -215,7 +216,7 @@ app.map = (function(w,d, $, _){
     }
 
     // get color depending on percent field
-    function getColorContracts(d) {
+    function π(d) {
       return d > 9350000  ? '#2CA25F' :
              d > 4800000 ? '#99D8C9' :
                           '#E5F5F9' ;
