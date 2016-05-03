@@ -32,12 +32,14 @@ app.map = (function(w,d, $, _){
     fdaContracts : null, 
     synarRates: null,
     smokefreeLaws : null, 
+    taxRates: null,
     //to create layers and legends 
     fdaWarningsActions : null,
     //for creating feature group objects
     featureGroupSynar : null,
     featureGroupContracts : null,
     featureGroupSmokefree : null,
+    featureGroupTax: null,
     template : null
   };
 
@@ -53,8 +55,7 @@ app.map = (function(w,d, $, _){
     synarRates: "SELECT * FROM synar_states",
     fdaContracts: "SELECT * FROM fda_state_contracts",
     smokefreeLaws: "SELECT * FROM smokefree_indoor_laws",
-
-
+    taxRates: "SELECT * FROM cigarette_excise_tax",
   };
 
   //HOLLY - research legend templates
@@ -117,6 +118,7 @@ app.map = (function(w,d, $, _){
     el.featureGroupSynar = L.featureGroup().addTo(el.map); 
     el.featureGroupContracts = L.featureGroup().addTo(el.map);  
     el.featureGroupSmokefree = L.featureGroup().addTo(el.map); 
+    el.featureGroupTax = L.featureGroup().addTo(el.map); 
     
     // add Bing satelitte imagery layer
     el.satellite = new L.BingLayer('AkuX5_O7AVBpUN7ujcWGCf4uovayfogcNVYhWKjbz2Foggzu8cYBxk6e7wfQyBQW');
@@ -142,6 +144,7 @@ app.map = (function(w,d, $, _){
     loadSynar();
     loadContracts();
     loadSmokefree();
+    loadTax();
 
     // add the warnings layer from cartodb
     getCDBData();
@@ -170,9 +173,6 @@ app.map = (function(w,d, $, _){
 
   //set style and color for geojson choropleth
   function style(feature) {
-      // if (GeojsonFile == "synar_states.geojson") {
-      //   var fillColorField = feature.properties.percent
-      // }
       return {
         weight: 2,
         opacity: 1,
@@ -203,55 +203,9 @@ app.map = (function(w,d, $, _){
 
     function resetHighlightSynar(e) {
        el.synarPoly.resetStyle(e.target);    
-      // info.update();
     }  
 // END FOR JUST SYNAR*************************************************
 
-// Smokefree GEOJSON load the geoJSON 
-  function loadSmokefree() {
-    $.getJSON('./data/smokefree_indoor_laws.geojson', function(json, textStatus) {  
-        el.smokefreePoly = L.geoJson(json, {
-          style: styleSmokefree,
-          onEachFeature: onEachFeatureSmokefree
-        });
-    });
-  } 
-  //set style and color for geojson choropleth
-  function styleSmokefree(feature) {
-      return {
-        weight: 2,
-        opacity: 1,
-        color: 'white',
-        dashArray: '3',
-        fillOpacity: 0.7,
-        fillColor: getColorSmokefree(feature.properties.smokefree)
-      };
-    }
-
-    // get color depending on percent field
-    function getColorSmokefree(d) {
-      return d == 0  ? '#919da3' :
-             d == 1 ? '#fec44f' :
-             d == 2 ? '#d95f0e' :
-                    '#000000' ;
-    }
-   
-    //set mouse over and click events on polygons 
-    function onEachFeatureSmokefree(feature, layer) {
-      //have popup show 
-      layer.bindPopup("<center>Smokefree State Laws:<br>" + feature.properties.label);
-      layer.on({
-        mouseover: highlightFeature,
-        mouseout: resetHighlightSmokefree,
-        click: zoomToFeature
-      });
-    } 
-
-    function resetHighlightSmokefree(e) {
-       el.smokefreePoly.resetStyle(e.target);      
-    } 
-     
-// END FOR JUST CONTRACTS*************************************************
 
 // Contracts GEOJSON load the geoJSON boundary FDA Contracts
   function loadContracts() {
@@ -299,6 +253,101 @@ app.map = (function(w,d, $, _){
      
 // END FOR JUST CONTRACTS*************************************************
 
+// Smokefree GEOJSON load the geoJSON 
+  function loadSmokefree() {
+    $.getJSON('./data/smokefree_indoor_laws.geojson', function(json, textStatus) {  
+        el.smokefreePoly = L.geoJson(json, {
+          style: styleSmokefree,
+          onEachFeature: onEachFeatureSmokefree
+        });
+    });
+  } 
+  //set style and color for geojson choropleth
+  function styleSmokefree(feature) {
+      return {
+        weight: 2,
+        opacity: 1,
+        color: 'white',
+        dashArray: '3',
+        fillOpacity: 0.7,
+        fillColor: getColorSmokefree(feature.properties.smokefree)
+      };
+    }
+
+    // get color depending on percent field
+    function getColorSmokefree(d) {
+      return d == 0  ? '#919da3' :
+             d == 1 ? '#fec44f' :
+             d == 2 ? '#d95f0e' :
+                    '#000000' ;
+    }
+   
+    //set mouse over and click events on polygons 
+    function onEachFeatureSmokefree(feature, layer) {
+      //have popup show 
+      layer.bindPopup("<center>Smokefree State Laws:<br>" + feature.properties.label);
+      layer.on({
+        mouseover: highlightFeature,
+        mouseout: resetHighlightSmokefree,
+        click: zoomToFeature
+      });
+    } 
+
+    function resetHighlightSmokefree(e) {
+       el.smokefreePoly.resetStyle(e.target);      
+    } 
+     
+// END FOR SMOKESFREE*************************************************
+
+// EXCISE TAX GEOJSON load the geoJSON 
+  function loadTax() {
+    $.getJSON('./data/cigarette_excise_tax.geojson ', function(json, textStatus) {  
+        el.taxPoly = L.geoJson(json, {
+          style: styleTax,
+          onEachFeature: onEachFeatureTax
+        });
+    });
+  } 
+  //set style and color for geojson choropleth
+  function styleTax(feature) {
+      return {
+        weight: 2,
+        opacity: 1,
+        color: 'white',
+        dashArray: '3',
+        fillOpacity: 0.7,
+        fillColor: getColorTax(feature.properties.tax)
+      };
+    }
+
+    // get color depending on percent field
+    function getColorTax(d) {
+      return d > 3.99  ? '#91003F' :
+             d > 2.99 ? '#CE1256' :
+             d > 1.99 ? '#E7298A' :
+             d > .99 ? '#DF65B0' :
+             d > .49 ? '#D4B9DA' :
+                    '#F1EEF6' ;
+    }
+   
+    //set mouse over and click events on polygons 
+    function onEachFeatureTax(feature, layer) {
+      //have popup show 
+      layer.bindPopup("<center>Cigarette Excise Tax:<br>" + feature.properties.tax_label);
+      layer.on({
+        mouseover: highlightFeature,
+        mouseout: resetHighlightTax,
+        click: zoomToFeature
+      });
+    } 
+
+    function resetHighlightTax(e) {
+       el.taxPoly.resetStyle(e.target);      
+    } 
+     
+// END FOR EXCISE TAX*************************************************
+
+//USED IN ALL LAYERS
     function highlightFeature(e) {
       var layer = e.target;
       layer.setStyle({
@@ -310,14 +359,11 @@ app.map = (function(w,d, $, _){
       if (!L.Browser.ie && !L.Browser.opera) {
         layer.bringToFront();
       }
-      //info.update(layer.feature.properties);
     }
 
 
     function zoomToFeature(e) {
       el.map.fitBounds(e.target.getBounds());
-      // info.update(e.target.feature.properties);
-      //alert("you clicked me");
     }
 
 //END CREATE GEOJSON LAYERS *************************************************************************
@@ -394,8 +440,8 @@ app.map = (function(w,d, $, _){
       renderLegend(el.legendData.fdaContracts);
       return true;
     },
-      smokefree_checkbox : function() {
-      renderLegend(el.legendData.smokefreeLaws);
+      tax_checkbox : function() {
+      renderLegend(el.legendData.taxRates);
       return true;
     },
     
@@ -419,6 +465,7 @@ app.map = (function(w,d, $, _){
           $nb = $('#nb'),
           $sg = $('#synar_checkbox'),
           $sf = $('#smokefree_checkbox');
+          $tx = $('#tax_checkbox');
 
     // HOLLY THIS IS FOR FDA TEST toggle NB new buildings layer
     $nb.change(function(){
@@ -451,6 +498,17 @@ app.map = (function(w,d, $, _){
         el.fdaWarningsActions['smokefree_checkbox']();        
       } else {    
         el.featureGroupSmokefree.removeLayer(el.smokefreePoly);
+        el.legend.addClass('hidden');
+      };
+    }); 
+
+    //HOLLY - toggle excise tax GEOJSON
+    $tx.change(function(){
+      if ($tx.is(':checked')) {
+        el.featureGroupTax.addLayer(el.taxPoly);
+        el.fdaWarningsActions['tax_checkbox']();        
+      } else {    
+        el.featureGroupTax.removeLayer(el.taxPoly);
         el.legend.addClass('hidden');
       };
     }); 
@@ -582,6 +640,35 @@ app.map = (function(w,d, $, _){
         {
           color : "#919da3",
           label : "none"
+        }
+      ]
+    },
+    taxRates : {
+      title : "Excise Tax 2016 - Dollars",
+      items : [
+        {
+          color : "#91003F",
+          label : "> 4.00"
+        },
+        {
+          color: "#CE1256",
+          label : "3.00 - 3.99"
+        },
+        {
+          color : "#E7298A",
+          label : "2.00 - 2.99"
+        },
+        {
+          color : "#DF65B0",
+          label : "1.00 - 1.99"
+        },
+        {
+          color : "#D4B9DA",
+          label : ".50 - .99"
+        },
+        {
+          color : "#F1EEF6",
+          label : "0 - .49"
         }
       ]
     },
