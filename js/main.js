@@ -14,25 +14,30 @@ app.map = (function(w,d, $, _){
   var el = {
     baseLayers : null,
     cdbURL : null,
-    contractsPoly : null, 
-    fdaWarnings : null,
-    fdaWarningsActions : null,
-    fdaContracts : null,   
-    featureGroupSynar : null,
-    featureGroupContracts : null,
-    featureGroupSmokefree : null,
     geocoder : null,
     geocoderMarker : null, 
     legend : null,
     map : null,
     mapboxTiles : null,
     satellite : null,
-    smokefreePoly : null,
-    smokefreeLaws : null,                 
     sql : null,   
     styles: null,
+    //for creating layers from geojson
+    contractsPoly : null, 
+    smokefreePoly : null,
     synarPoly : null,
+    taxPoly: null,
+    //for sql queries 
+    fdaWarnings : null,
+    fdaContracts : null, 
     synarRates: null,
+    smokefreeLaws : null, 
+    //to create layers and legends 
+    fdaWarningsActions : null,
+    //for creating feature group objects
+    featureGroupSynar : null,
+    featureGroupContracts : null,
+    featureGroupSmokefree : null,
     template : null
   };
 
@@ -48,6 +53,7 @@ app.map = (function(w,d, $, _){
     synarRates: "SELECT * FROM synar_states",
     fdaContracts: "SELECT * FROM fda_state_contracts",
     smokefreeLaws: "SELECT * FROM smokefree_indoor_laws",
+
 
   };
 
