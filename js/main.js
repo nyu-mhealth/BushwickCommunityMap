@@ -20,6 +20,7 @@ app.map = (function(w,d, $, _){
     fdaContracts : null,   
     featureGroupSynar : null,
     featureGroupContracts : null,
+    featureGroupSmokefree : null,
     geocoder : null,
     geocoderMarker : null, 
     legend : null,
@@ -108,8 +109,8 @@ app.map = (function(w,d, $, _){
 
     // feature groups to store geoJSON
     el.featureGroupSynar = L.featureGroup().addTo(el.map); 
-    //create another featureGroup for storing
-    el.featureGroupContracts = L.featureGroup().addTo(el.map);   
+    el.featureGroupContracts = L.featureGroup().addTo(el.map);  
+    el.featureGroupSmokefree = L.featureGroup().addTo(el.map); 
     
     // add Bing satelitte imagery layer
     el.satellite = new L.BingLayer('AkuX5_O7AVBpUN7ujcWGCf4uovayfogcNVYhWKjbz2Foggzu8cYBxk6e7wfQyBQW');
@@ -203,9 +204,9 @@ app.map = (function(w,d, $, _){
 // Smokefree GEOJSON load the geoJSON 
   function loadSmokefree() {
     $.getJSON('./data/smokefree_indoor_laws.geojson', function(json, textStatus) {  
-        el.contractsPoly = L.geoJson(json, {
+        el.smokefreePoly = L.geoJson(json, {
           style: styleSmokefree,
-          onEachFeature: onEachFeatureContracts
+          onEachFeature: onEachFeatureSmokefree
         });
     });
   } 
@@ -217,31 +218,31 @@ app.map = (function(w,d, $, _){
         color: 'white',
         dashArray: '3',
         fillOpacity: 0.7,
-        fillColor: getColorContracts(feature.properties.total_num)
+        fillColor: getColorSmokefree(feature.properties.smokefree)
       };
     }
 
     // get color depending on percent field
-    function π(d) {
-      return d > 9350000  ? '#2CA25F' :
-             d > 4800000 ? '#99D8C9' :
-                          '#E5F5F9' ;
+    function getColorSmokefree(d) {
+      return d == 0  ? '#919da3' :
+             d == 1 ? '#fec44f' :
+             d == 2 ? '#d95f0e' :
+                    '#000000' ;
     }
    
     //set mouse over and click events on polygons 
-    function onEachFeatureContracts(feature, layer) {
+    function onEachFeatureSmokefree(feature, layer) {
       //have popup show 
-      layer.bindPopup("<center>" + feature.properties.name + "<br><center> Total Awards: " + feature.properties.total_label);
+      layer.bindPopup("<center>Smokefree State Laws:<br>" + feature.properties.label);
       layer.on({
         mouseover: highlightFeature,
-        mouseout: resetHighlightContracts,
+        mouseout: resetHighlightSmokefree,
         click: zoomToFeature
       });
     } 
 
-    function resetHighlightContracts(e) {
-       el.contractsPoly.resetStyle(e.target);      
-      // info.update();
+    function resetHighlightSmokefree(e) {
+       el.smokefreePoly.resetStyle(e.target);      
     } 
      
 // END FOR JUST CONTRACTS*************************************************
@@ -387,6 +388,10 @@ app.map = (function(w,d, $, _){
       renderLegend(el.legendData.fdaContracts);
       return true;
     },
+      smokefree_checkbox : function() {
+      renderLegend(el.legendData.smokefreeLaws);
+      return true;
+    },
     
   };
 
@@ -406,7 +411,8 @@ app.map = (function(w,d, $, _){
     // checkboxes for dob permit layer & stories
     var checkboxDOB = $('input.dob:checkbox'),
           $nb = $('#nb'),
-          $sg = $('#synar_checkbox');
+          $sg = $('#synar_checkbox'),
+          $sf = $('#smokefree_checkbox');
 
     // HOLLY THIS IS FOR FDA TEST toggle NB new buildings layer
     $nb.change(function(){
@@ -428,6 +434,17 @@ app.map = (function(w,d, $, _){
         el.fdaWarningsActions['synar_checkbox']();        
       } else {    
         el.featureGroupSynar.removeLayer(el.synarPoly);
+        el.legend.addClass('hidden');
+      };
+    }); 
+
+    //HOLLY - toggle smokefree GEOJSON
+    $sf.change(function(){
+      if ($sf.is(':checked')) {
+        el.featureGroupSmokefree.addLayer(el.smokefreePoly);
+        el.fdaWarningsActions['smokefree_checkbox']();        
+      } else {    
+        el.featureGroupSmokefree.removeLayer(el.smokefreePoly);
         el.legend.addClass('hidden');
       };
     }); 
@@ -538,6 +555,27 @@ app.map = (function(w,d, $, _){
         {
           color : "#E5F5F9",
           label : "< $4,800,000"
+        }
+      ]
+    },
+      smokefreeLaws : {
+      title : "Smokefree Law Type",
+      items : [
+        {
+          color : "#d95f0e",
+          label : "all categories"
+        },
+        {
+          color: "#fec44f",
+          label : "one or two categories"
+        },
+        {
+          color : "#000000",
+          label : "not yet enacted"
+        },
+        {
+          color : "#919da3",
+          label : "none"
         }
       ]
     },
