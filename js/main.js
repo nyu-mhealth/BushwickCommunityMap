@@ -18,17 +18,20 @@ app.map = (function(w,d, $, _){
     fdaWarnings : null,
     fdaWarningsActions : null,
     fdaContracts : null,   
-    featureGroup : null,
+    featureGroupSynar : null,
     featureGroupContracts : null,
     geocoder : null,
     geocoderMarker : null, 
     legend : null,
     map : null,
     mapboxTiles : null,
-    satellite : null,                
+    satellite : null,
+    smokefreePoly : null,
+    smokefreeLaws : null,                 
     sql : null,   
     styles: null,
     synarPoly : null,
+    synarRates: null,
     template : null
   };
 
@@ -43,6 +46,8 @@ app.map = (function(w,d, $, _){
     civilPenalties : "SELECT * FROM allwarnings_dc WHERE decisiontype = 'Civil Money Penalty'",
     synarRates: "SELECT * FROM synar_states",
     fdaContracts: "SELECT * FROM fda_state_contracts",
+    smokefreeLaws: "SELECT * FROM smokefree_indoor_laws",
+
   };
 
   //HOLLY - research legend templates
@@ -102,7 +107,7 @@ app.map = (function(w,d, $, _){
 
 
     // feature groups to store geoJSON
-    el.featureGroup = L.featureGroup().addTo(el.map); 
+    el.featureGroupSynar = L.featureGroup().addTo(el.map); 
     //create another featureGroup for storing
     el.featureGroupContracts = L.featureGroup().addTo(el.map);   
     
@@ -129,6 +134,7 @@ app.map = (function(w,d, $, _){
     // add geojson layers
     loadSynar();
     loadContracts();
+    loadSmokefree();
 
     // add the warnings layer from cartodb
     getCDBData();
@@ -194,7 +200,53 @@ app.map = (function(w,d, $, _){
     }  
 // END FOR JUST SYNAR*************************************************
 
-  // Contracts GEOJSON load the geoJSON boundary FDA Contracts
+// Smokefree GEOJSON load the geoJSON 
+  function loadSmokefree() {
+    $.getJSON('./data/smokefree_indoor_laws.geojson', function(json, textStatus) {  
+        el.contractsPoly = L.geoJson(json, {
+          style: styleSmokefree,
+          onEachFeature: onEachFeatureContracts
+        });
+    });
+  } 
+  //set style and color for geojson choropleth
+  function styleSmokefree(feature) {
+      return {
+        weight: 2,
+        opacity: 1,
+        color: 'white',
+        dashArray: '3',
+        fillOpacity: 0.7,
+        fillColor: getColorContracts(feature.properties.total_num)
+      };
+    }
+
+    // get color depending on percent field
+    function π(d) {
+      return d > 9350000  ? '#2CA25F' :
+             d > 4800000 ? '#99D8C9' :
+                          '#E5F5F9' ;
+    }
+   
+    //set mouse over and click events on polygons 
+    function onEachFeatureContracts(feature, layer) {
+      //have popup show 
+      layer.bindPopup("<center>" + feature.properties.name + "<br><center> Total Awards: " + feature.properties.total_label);
+      layer.on({
+        mouseover: highlightFeature,
+        mouseout: resetHighlightContracts,
+        click: zoomToFeature
+      });
+    } 
+
+    function resetHighlightContracts(e) {
+       el.contractsPoly.resetStyle(e.target);      
+      // info.update();
+    } 
+     
+// END FOR JUST CONTRACTS*************************************************
+
+// Contracts GEOJSON load the geoJSON boundary FDA Contracts
   function loadContracts() {
     $.getJSON('./data/fda_state_contracts.geojson', function(json, textStatus) {  
         el.contractsPoly = L.geoJson(json, {
@@ -372,10 +424,10 @@ app.map = (function(w,d, $, _){
     //HOLLY - toggle SYNAR GEOJSON
     $sg.change(function(){
       if ($sg.is(':checked')) {
-        el.featureGroup.addLayer(el.synarPoly);
+        el.featureGroupSynar.addLayer(el.synarPoly);
         el.fdaWarningsActions['synar_checkbox']();        
       } else {    
-        el.featureGroup.removeLayer(el.synarPoly);
+        el.featureGroupSynar.removeLayer(el.synarPoly);
         el.legend.addClass('hidden');
       };
     }); 
