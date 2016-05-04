@@ -12,6 +12,7 @@ app.map = (function(w,d, $, _){
   //  define all  variables for map parts and layers 
   //  store in an object called 'el' that can be accessed elsewhere
   var el = {
+    //general map variables
     baseLayers : null,
     cdbURL : null,
     geocoder : null,
@@ -27,12 +28,14 @@ app.map = (function(w,d, $, _){
     smokefreePoly : null,
     synarPoly : null,
     taxPoly: null,
+    youthPoly: null,
     //for sql queries 
     fdaWarnings : null,
     fdaContracts : null, 
     synarRates: null,
     smokefreeLaws : null, 
     taxRates: null,
+    youthRates: null,
     //to create layers and legends 
     fdaWarningsActions : null,
     //for creating feature group objects
@@ -40,6 +43,7 @@ app.map = (function(w,d, $, _){
     featureGroupContracts : null,
     featureGroupSmokefree : null,
     featureGroupTax: null,
+    featureGroupYouth: null,
     template : null
   };
 
@@ -56,6 +60,7 @@ app.map = (function(w,d, $, _){
     fdaContracts: "SELECT * FROM fda_state_contracts",
     smokefreeLaws: "SELECT * FROM smokefree_indoor_laws",
     taxRates: "SELECT * FROM cigarette_excise_tax",
+    youthRates: "SELECT * FROM youth_smoking",
   };
 
   //HOLLY - research legend templates
@@ -119,7 +124,8 @@ app.map = (function(w,d, $, _){
     el.featureGroupContracts = L.featureGroup().addTo(el.map);  
     el.featureGroupSmokefree = L.featureGroup().addTo(el.map); 
     el.featureGroupTax = L.featureGroup().addTo(el.map); 
-    
+    el.featureGroupYouth = L.featureGroup().addTo(el.map); 
+
     // add Bing satelitte imagery layer
     el.satellite = new L.BingLayer('AkuX5_O7AVBpUN7ujcWGCf4uovayfogcNVYhWKjbz2Foggzu8cYBxk6e7wfQyBQW');
 
@@ -145,6 +151,7 @@ app.map = (function(w,d, $, _){
     loadContracts();
     loadSmokefree();
     loadTax();
+    loadYouth();
 
     // add the warnings layer from cartodb
     getCDBData();
@@ -156,11 +163,8 @@ app.map = (function(w,d, $, _){
 
 //BEGIN CREATE GEOJSON LAYERS *************************************************************************
 
-  // SYNAR GEOJSON load the geoJSON boundary Synar State Rates
+// SYNAR GEOJSON load the geoJSON boundary Synar State Rates ******************************************
   
-  //var GeojsonFile;
-
-
   function loadSynar() {
     GeojsonFile = "synar_states.geojson"
     $.getJSON('./data/synar_states.geojson', function(json, textStatus) {
@@ -207,7 +211,7 @@ app.map = (function(w,d, $, _){
 // END FOR JUST SYNAR*************************************************
 
 
-// Contracts GEOJSON load the geoJSON boundary FDA Contracts
+// GEOJSON load the geoJSON boundary FDA Contracts*******************************
   function loadContracts() {
     $.getJSON('./data/fda_state_contracts.geojson', function(json, textStatus) {  
         el.contractsPoly = L.geoJson(json, {
@@ -253,7 +257,7 @@ app.map = (function(w,d, $, _){
      
 // END FOR JUST CONTRACTS*************************************************
 
-// Smokefree GEOJSON load the geoJSON 
+// Smokefree GEOJSON load the geoJSON **************************************** 
   function loadSmokefree() {
     $.getJSON('./data/smokefree_indoor_laws.geojson', function(json, textStatus) {  
         el.smokefreePoly = L.geoJson(json, {
@@ -262,6 +266,7 @@ app.map = (function(w,d, $, _){
         });
     });
   } 
+
   //set style and color for geojson choropleth
   function styleSmokefree(feature) {
       return {
@@ -299,7 +304,7 @@ app.map = (function(w,d, $, _){
      
 // END FOR SMOKESFREE*************************************************
 
-// EXCISE TAX GEOJSON load the geoJSON 
+// EXCISE TAX GEOJSON load the geoJSON*********************************** 
   function loadTax() {
     $.getJSON('./data/cigarette_excise_tax.geojson ', function(json, textStatus) {  
         el.taxPoly = L.geoJson(json, {
@@ -346,6 +351,53 @@ app.map = (function(w,d, $, _){
     } 
      
 // END FOR EXCISE TAX*************************************************
+
+// YOUTH SMOKING GEOJSON load the geoJSON*********************************** 
+  function loadYouth() {
+    $.getJSON('./data/youth_smoking.geojson', function(json, textStatus) {  
+        el.youthPoly = L.geoJson(json, {
+          style: styleYouth,
+          onEachFeature: onEachFeatureYouth
+        });
+    });
+  } 
+  //set style and color for geojson choropleth
+  function styleYouth(feature) {
+      return {
+        weight: 2,
+        opacity: 1,
+        color: 'white',
+        dashArray: '3',
+        fillOpacity: 0.7,
+        fillColor: getColorYouth(feature.properties.rate)
+      };
+    }
+
+    // get color depending on percent field
+    function getColorYouth(d) {
+      return d = null  ? '#cecec4' :
+             d > 15 ? '#e31a1c' :
+             d > 10 ? '#fd8d3c' :
+             d > 5 ? '#FECC5C' :
+                    '#FFFFB2' ;
+    }
+   
+    //set mouse over and click events on polygons 
+    function onEachFeatureYouth(feature, layer) {
+      //have popup show 
+      layer.bindPopup("<center>Youth Smoking Rate 2013:<br>" + feature.properties.rate);
+      layer.on({
+        mouseover: highlightFeature,
+        mouseout: resetHighlightYouth,
+        click: zoomToFeature
+      });
+    } 
+
+    function resetHighlightYouth(e) {
+       el.youthPoly.resetStyle(e.target);      
+    } 
+     
+// END FOR YOUTH SMOKING ************************************************
 
 //USED IN ALL LAYERS
     function highlightFeature(e) {
@@ -440,8 +492,16 @@ app.map = (function(w,d, $, _){
       renderLegend(el.legendData.fdaContracts);
       return true;
     },
+      smokefree_checkbox : function() {
+      renderLegend(el.legendData.smokefreeLaws);
+      return true;
+    },
       tax_checkbox : function() {
       renderLegend(el.legendData.taxRates);
+      return true;
+    },
+      youth_checkbox : function() {
+      renderLegend(el.legendData.youthRates);
       return true;
     },
     
@@ -466,6 +526,7 @@ app.map = (function(w,d, $, _){
           $sg = $('#synar_checkbox'),
           $sf = $('#smokefree_checkbox');
           $tx = $('#tax_checkbox');
+          $ys = $('#youth_checkbox');
 
     // HOLLY THIS IS FOR FDA TEST toggle NB new buildings layer
     $nb.change(function(){
@@ -509,6 +570,17 @@ app.map = (function(w,d, $, _){
         el.fdaWarningsActions['tax_checkbox']();        
       } else {    
         el.featureGroupTax.removeLayer(el.taxPoly);
+        el.legend.addClass('hidden');
+      };
+    }); 
+
+    //HOLLY - toggle youth smoking GEOJSON
+    $ys.change(function(){
+      if ($ys.is(':checked')) {
+        el.featureGroupYouth.addLayer(el.youthPoly);
+        el.fdaWarningsActions['youth_checkbox']();        
+      } else {    
+        el.featureGroupYouth.removeLayer(el.youthPoly);
         el.legend.addClass('hidden');
       };
     }); 
@@ -669,6 +741,31 @@ app.map = (function(w,d, $, _){
         {
           color : "#F1EEF6",
           label : "0 - .49"
+        }
+      ]
+    },
+      youthRates : {
+      title : "Youth Smoking Rates - 2013",
+      items : [
+        {
+          color : "#e31a1c",
+          label : "20 - 15.01"
+        },
+        {
+          color: "#fd8d3c",
+          label : "15 - 10.01"
+        },
+        {
+          color : "#FECC5C",
+          label : "10 - 5.01"
+        },
+        {
+          color : "#FFFFB2",
+          label : "5 - 0"
+        },
+        {
+          color : "#cecec4",
+          label : "No Data"
         }
       ]
     },
