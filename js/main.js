@@ -229,7 +229,7 @@ app.map = (function(w,d, $, _){
     }
 
     // get color depending on percent field
-    function π(d) {
+    function getColorContracts(d) {
       return d > 9350000  ? '#2CA25F' :
              d > 4800000 ? '#99D8C9' :
                           '#E5F5F9' ;
