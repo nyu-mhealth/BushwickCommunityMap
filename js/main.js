@@ -29,6 +29,7 @@ app.map = (function(w,d, $, _){
     synarPoly : null,
     taxPoly: null,
     youthPoly: null,
+    adultPoly: null,
     //for sql queries 
     fdaWarnings : null,
     fdaContracts : null, 
@@ -36,6 +37,7 @@ app.map = (function(w,d, $, _){
     smokefreeLaws : null, 
     taxRates: null,
     youthRates: null,
+    adultRates: null,
     //to create layers and legends 
     fdaWarningsActions : null,
     //for creating feature group objects
@@ -44,6 +46,7 @@ app.map = (function(w,d, $, _){
     featureGroupSmokefree : null,
     featureGroupTax: null,
     featureGroupYouth: null,
+    featureGroupAdult: null,
     template : null
   };
 
@@ -61,6 +64,7 @@ app.map = (function(w,d, $, _){
     smokefreeLaws: "SELECT * FROM smokefree_indoor_laws",
     taxRates: "SELECT * FROM cigarette_excise_tax",
     youthRates: "SELECT * FROM youth_smoking",
+    adultRates: "SELECT * FROM adult_smoking",
   };
 
   //HOLLY - research legend templates
@@ -125,6 +129,7 @@ app.map = (function(w,d, $, _){
     el.featureGroupSmokefree = L.featureGroup().addTo(el.map); 
     el.featureGroupTax = L.featureGroup().addTo(el.map); 
     el.featureGroupYouth = L.featureGroup().addTo(el.map); 
+    el.featureGroupAdult = L.featureGroup().addTo(el.map); 
 
     // add Bing satelitte imagery layer
     el.satellite = new L.BingLayer('AkuX5_O7AVBpUN7ujcWGCf4uovayfogcNVYhWKjbz2Foggzu8cYBxk6e7wfQyBQW');
@@ -152,6 +157,7 @@ app.map = (function(w,d, $, _){
     loadSmokefree();
     loadTax();
     loadYouth();
+    loadAdult();
 
     // add the warnings layer from cartodb
     getCDBData();
@@ -399,6 +405,53 @@ app.map = (function(w,d, $, _){
      
 // END FOR YOUTH SMOKING ************************************************
 
+// ADULT SMOKING GEOJSON load the geoJSON*********************************** 
+  function loadAdult() {
+    $.getJSON('./data/adult_smoking.geojson', function(json, textStatus) {  
+        el.adultPoly = L.geoJson(json, {
+          style: styleAdult,
+          onEachFeature: onEachFeatureAdult
+        });
+    });
+  } 
+  //set style and color for geojson choropleth
+  function styleAdult(feature) {
+      return {
+        weight: 2,
+        opacity: 1,
+        color: 'white',
+        dashArray: '3',
+        fillOpacity: 0.7,
+        fillColor: getColorAdult(feature.properties.data_value)
+      };
+    }
+
+    // get color depending on percent field
+    function getColorAdult(d) {
+      return d > 25  ? '#BD0026' :
+             d > 20 ? '#F03B20' :
+             d > 15 ? '#FD8D3C' :
+             d > 10 ? '#FECC5C' :
+                    '#FFFFB2' ;
+    }
+   
+    //set mouse over and click events on polygons 
+    function onEachFeatureAdult(feature, layer) {
+      //have popup show 
+      layer.bindPopup("<center>Adult Smoking Rate 2014:<br>" + feature.properties.data_value);
+      layer.on({
+        mouseover: highlightFeature,
+        mouseout: resetHighlightAdult,
+        click: zoomToFeature
+      });
+    } 
+
+    function resetHighlightAdult(e) {
+       el.adultPoly.resetStyle(e.target);      
+    } 
+     
+// END FOR ADULT SMOKING ************************************************
+
 //USED IN ALL LAYERS
     function highlightFeature(e) {
       var layer = e.target;
@@ -504,6 +557,10 @@ app.map = (function(w,d, $, _){
       renderLegend(el.legendData.youthRates);
       return true;
     },
+      adult_checkbox : function() {
+      renderLegend(el.legendData.adultRates);
+      return true;
+    },
     
   };
 
@@ -527,6 +584,7 @@ app.map = (function(w,d, $, _){
           $sf = $('#smokefree_checkbox');
           $tx = $('#tax_checkbox');
           $ys = $('#youth_checkbox');
+          $as = $('#adult_checkbox');
 
     // HOLLY THIS IS FOR FDA TEST toggle NB new buildings layer
     $nb.change(function(){
@@ -581,6 +639,17 @@ app.map = (function(w,d, $, _){
         el.fdaWarningsActions['youth_checkbox']();        
       } else {    
         el.featureGroupYouth.removeLayer(el.youthPoly);
+        el.legend.addClass('hidden');
+      };
+    }); 
+
+    //HOLLY - toggle adult smoking GEOJSON
+    $as.change(function(){
+      if ($as.is(':checked')) {
+        el.featureGroupAdult.addLayer(el.adultPoly);
+        el.fdaWarningsActions['adult_checkbox']();        
+      } else {    
+        el.featureGroupAdult.removeLayer(el.adultPoly);
         el.legend.addClass('hidden');
       };
     }); 
@@ -766,6 +835,27 @@ app.map = (function(w,d, $, _){
         {
           color : "#cecec4",
           label : "No Data"
+        }
+      ]
+    },
+      adultRates : {
+      title : "Adult Smoking Rates - 2014",
+      items : [
+        {
+          color : "#e31a1c",
+          label : "30 - 25.01"
+        },
+        {
+          color: "#fd8d3c",
+          label : "25 - 15.01"
+        },
+        {
+          color : "#FECC5C",
+          label : "15 - 10.01"
+        },
+        {
+          color : "#FFFFB2",
+          label : "10 - 0"
         }
       ]
     },
