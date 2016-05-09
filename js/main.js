@@ -57,8 +57,8 @@ app.map = (function(w,d, $, _){
 
   // queries for warning violatiions - sent to cartodb when layer buttons clicked
   el.sql = {
-    warningLetters : "SELECT * FROM allwarnings_dc WHERE decisiontype = 'Warning Letter'",
-    civilPenalties : "SELECT * FROM allwarnings_dc WHERE decisiontype = 'Civil Money Penalty'",
+    warningLetters : "SELECT * FROM allwarnings_dc_nc_va WHERE decisiontype = 'Warning Letter'",
+    civilPenalties : "SELECT * FROM allwarnings_dc_nc_va WHERE decisiontype = 'Civil Money Penalty'",
     synarRates: "SELECT * FROM synar_states",
     fdaContracts: "SELECT * FROM fda_state_contracts",
     smokefreeLaws: "SELECT * FROM smokefree_indoor_laws",
@@ -85,10 +85,10 @@ app.map = (function(w,d, $, _){
   var initMap = function() {
     // map paramaters to pass to Leaflet
     var params = {
-      center : [38.8963722,-77.0215417], //DC
+      center : [35.816408,-78.638223], //DC
       //minZoom : 14,
       //maxZoom : 19,
-      zoom : 11,
+      zoom : 6,
       //maxBounds : L.latLngBounds([40.675496,-73.957987],[40.714216,-73.877306]), 
       zoomControl : false,
       infoControl: false,
