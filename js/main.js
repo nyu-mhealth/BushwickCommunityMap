@@ -485,10 +485,14 @@ app.map = (function(w,d, $, _){
         https: true 
       }, 
       function(layer) {
+        //get count
+        var num_sublayers = layer.getSubLayerCount();
+        alert(num_sublayers);
         // store the warnings sublayer - all warnings and civil penalties
         layer.getSubLayer(0).setCartoCSS(el.styles.warningLetters);
         layer.getSubLayer(0).setSQL(el.sql.warningLetters);
         el.fdaWarnings = layer.getSubLayer(0); 
+        //store graduated circle version of warnings'
 
 
         // positions the tool tip in relationship to user's mouse
@@ -500,12 +504,11 @@ app.map = (function(w,d, $, _){
               });
           };                                
 
+        // add the cdb layer to the map
+        el.map.addLayer(layer, false);
 
-      // add the cdb layer to the map
-      el.map.addLayer(layer, false);
-
-      // make sure the base layer stays below the cdb layer      
-      el.mapboxTiles.bringToBack();
+        // make sure the base layer stays below the cdb layer      
+        el.mapboxTiles.bringToBack();
 
       }).on('done', function() {
         
