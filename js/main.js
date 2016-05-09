@@ -528,13 +528,13 @@ app.map = (function(w,d, $, _){
      warningLetters : function() {
       changeCartoCSS(el.fdaWarnings, el.styles.warningLetters);
       changeSQL(el.fdaWarnings, el.sql.warningLetters);
-      renderLegend(el.legendData.warningLetters);
+      // renderLegend(el.legendData.warningLetters);
       return true;
     },
      civilPenalties : function() {
       changeCartoCSS(el.fdaWarnings, el.styles.civilPenalties);
       changeSQL(el.fdaWarnings, el.sql.civilPenalties);
-      renderLegend(el.legendData.civilPenalties);
+      // renderLegend(el.legendData.civilPenalties);
       return true;
     },
       synar_checkbox : function() {
